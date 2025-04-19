@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Không cho phép các bot crawl các file JS và CSS
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Sitemap
+Sitemap: https://dev.akivn.net/sitemap.xml
