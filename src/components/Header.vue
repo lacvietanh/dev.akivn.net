@@ -25,7 +25,7 @@ const toggleSidebar = () => {
         </button>
 
         <a href="/" class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
-          Dev.akivn.net
+          AkiNet Devs
         </a>
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
@@ -37,21 +37,9 @@ const toggleSidebar = () => {
           class="hidden sm:inline text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
           AkiNet
         </a>
-        <a href="https://m.me/lacvietanh" target="_blank"
-          class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-          <i class="fab fa-facebook-messenger"></i>
-        </a>
         <a href="https://github.com/lacvietanh/dev.akivn.net" target="_blank"
           class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
           <i class="fab fa-github"></i>
-        </a>
-        <a href="https://www.facebook.com/lacvietanh" target="_blank"
-          class="hidden sm:inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-          <i class="fab fa-facebook"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/lacvietanh" target="_blank"
-          class="hidden sm:inline-block text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-          <i class="fab fa-linkedin"></i>
         </a>
       </div>
     </div>

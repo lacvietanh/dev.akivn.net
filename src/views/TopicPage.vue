@@ -1,7 +1,23 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import SEO from '../components/SEO.vue'
+import Head from '../components/Head.vue'
+import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
+
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
+      } catch (__) {}
+    }
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
+  }
+})
 
 const route = useRoute()
 const topic = ref('')
@@ -9,6 +25,7 @@ const content = ref('')
 const isLoading = ref(true)
 const pageTitle = ref('')
 const pageDescription = ref('')
+const rawContent = ref('')
 
 // Tạo tiêu đề SEO động dựa trên chủ đề
 const seoTitle = computed(() => {
@@ -33,93 +50,90 @@ const seoKeywords = computed(() => {
   return `${topic.value}, ${category}, học lập trình, tài liệu tiếng việt, akinet, dev.akivn.net`
 })
 
-// Hàm giả lập việc tải nội dung chủ đề từ file markdown
-// Trong phiên bản thực tế, bạn sẽ cần tải nội dung thực từ các file hoặc API
+// Hàm tải nội dung chủ đề từ file markdown
 const loadTopicContent = async () => {
   isLoading.value = true
-  
-  // Lấy thông tin từ route
-  const category = route.path.split('/')[1] // 'basics', 'tools', 'vue', etc.
-  topic.value = route.params.topic // 'html', 'css', 'javascript', etc.
-  
-  // Giả lập việc tải nội dung
-  setTimeout(() => {
-    // Trong thực tế, bạn sẽ tải nội dung từ file markdown và chuyển đổi sang HTML
-    if (category === 'basics' && topic.value === 'html') {
-      content.value = `
-        <h1>HTML Cơ bản</h1>
-        <p>HTML (HyperText Markup Language) là ngôn ngữ đánh dấu tiêu chuẩn để tạo trang web. HTML mô tả cấu trúc của một trang web thông qua các phần tử (elements).</p>
-        
-        <h2>Cấu trúc cơ bản của một trang HTML</h2>
-        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;title&gt;Tiêu đề trang web&lt;/title&gt;
-  &lt;meta charset="UTF-8"&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;Đây là tiêu đề lớn&lt;/h1&gt;
-  &lt;p&gt;Đây là một đoạn văn bản.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-        
-        <h2>Các thẻ HTML cơ bản</h2>
-        <p>HTML có nhiều thẻ khác nhau để cấu trúc nội dung như tiêu đề, đoạn văn, liên kết, hình ảnh, và danh sách.</p>
-        <p>Xem thêm tại <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">MDN Web Docs</a></p>
-      `
-    } else if (category === 'vue' && topic.value === 'vite-setup') {
-      content.value = `
-        <h1>Khởi tạo dự án với Vue và Vite</h1>
-        <p>Vue.js là một framework JavaScript linh hoạt để xây dựng giao diện người dùng. Kết hợp với Vite - một công cụ build hiện đại, bạn có thể tạo ra các ứng dụng Vue nhanh chóng và hiệu quả.</p>
-        
-        <h2>Tạo dự án Vue với Vite</h2>
-        <pre><code class="language-bash">npm create vite@latest my-vue-app -- --template vue</code></pre>
-        
-        <h2>Cấu trúc dự án</h2>
-        <p>Một dự án Vue/Vite cơ bản có cấu trúc gồm thư mục public cho tài nguyên tĩnh, thư mục src cho mã nguồn, file cấu hình Vite và các file khác.</p>
-        
-        <h2>Khởi chạy dự án</h2>
-        <pre><code class="language-bash">npm run dev</code></pre>
-        
-        <p>Xem thêm tại <a href="https://vuejs.org/guide/introduction.html" target="_blank">Tài liệu Vue.js</a></p>
-      `
-    } else {
-      content.value = `
-        <h1>${topic.value.charAt(0).toUpperCase() + topic.value.slice(1)}</h1>
-        <p>Nội dung bài học về ${topic.value} trong danh mục ${category} sẽ được hiển thị ở đây.</p>
-        <p>Đây là nơi hiển thị chi tiết về chủ đề ${topic.value}. Trong phiên bản hoàn chỉnh, nội dung này sẽ được tải từ các file markdown thực.</p>
-        <h2>Các phần của bài học</h2>
-        <ul>
-          <li>Giới thiệu về ${topic.value}</li>
-          <li>Cơ bản về ${topic.value}</li>
-          <li>Thực hành với ${topic.value}</li>
-          <li>Tham khảo thêm</li>
-        </ul>
-        <p>Vui lòng chọn một chủ đề khác từ thanh điều hướng bên trái để xem nội dung khác.</p>
-      `
-    }
-    isLoading.value = false
-  }, 300) // Giả lập độ trễ khi tải nội dung
-}
+  content.value = '' // Reset content
+  pageTitle.value = '' // Reset title
+  pageDescription.value = '' // Reset description
+  rawContent.value = '' // Reset raw content
 
-// Theo dõi thay đổi route để cập nhật nội dung
-onMounted(loadTopicContent)
-// Khi route thay đổi (chuyển chủ đề), tải lại nội dung
-const routeParams = route.params
+  // Lấy thông tin từ route path
+  const pathParts = route.path.split('/').filter(p => p); // Tách và loại bỏ phần tử rỗng
+  const category = pathParts.length > 0 ? pathParts[0] : ''; // 'basics', 'tools', 'vue', etc.
+  topic.value = pathParts.length > 1 ? pathParts[pathParts.length - 1] : ''; // Lấy phần cuối cùng làm topic
+
+  // Kiểm tra nếu category hoặc topic rỗng (có thể xảy ra ở trang chủ hoặc lỗi)
+  if (!category || !topic.value) {
+    console.error('Không thể xác định category hoặc topic từ path:', route.path);
+    content.value = `<p>Lỗi: Không thể xác định chủ đề từ đường dẫn.</p>`;
+    isLoading.value = false;
+    return;
+  }
+
+  try {
+    // Vite's import.meta.glob with { as: 'raw' } directly imports the raw string content.
+    const modules = import.meta.glob('/src/content/**/*.md', { eager: false, as: 'raw' });
+    const modulePath = `/src/content/${category}/${topic.value}.md`;
+
+    if (modules[modulePath]) {
+      // Call the dynamic import function to get the raw string
+      rawContent.value = await modules[modulePath](); 
+
+      // Tách tiêu đề và mô tả từ nội dung markdown (ví dụ đơn giản)
+      const lines = rawContent.value.split('\n');
+      if (lines.length > 0 && lines[0].startsWith('# ')) {
+        pageTitle.value = lines[0].substring(2).trim();
+      }
+
+      for (let i = 1; i < lines.length; i++) {
+        if (lines[i].trim() && !lines[i].startsWith('#') && !lines[i].startsWith('```')) {
+          pageDescription.value = lines[i].trim();
+          break;
+        }
+      }
+
+      content.value = md.render(rawContent.value);
+    } else {
+      console.warn(`Không tìm thấy module Markdown cho: ${modulePath}`);
+      // Fallback nếu không tìm thấy file markdown
+      const fallbackTitle = topic.value.charAt(0).toUpperCase() + topic.value.slice(1);
+      pageTitle.value = fallbackTitle;
+      content.value = `
+        <h1>${fallbackTitle}</h1>
+        <p>Nội dung về chủ đề ${topic.value} đang được chuẩn bị.</p>
+        <p>Vui lòng quay lại sau.</p>
+      `;
+    }
+
+  } catch (error) {
+    console.error('Không thể tải hoặc xử lý nội dung markdown:', error);
+    const fallbackTitle = topic.value ? topic.value.charAt(0).toUpperCase() + topic.value.slice(1) : 'Lỗi';
+    pageTitle.value = fallbackTitle;
+    content.value = `
+      <h1>${fallbackTitle}</h1>
+      <p>Đã xảy ra lỗi khi tải nội dung. Vui lòng thử lại sau.</p>
+    `;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Gọi loadTopicContent khi component được mounted
+onMounted(loadTopicContent);
+
+// Và gọi lại khi route thay đổi (ví dụ: chuyển giữa các topic)
+watch(() => route.path, loadTopicContent);
 </script>
 
 <template>
-  <SEO 
-    :title="seoTitle"
-    :description="seoDescription"
-    :keywords="seoKeywords"
-  />
+
+  <Head :title="seoTitle" :description="seoDescription" :keywords="seoKeywords" />
   <div class="prose dark:prose-invert max-w-none">
     <div v-if="isLoading" class="py-8 flex justify-center">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-    
+
     <div v-else v-html="content" class="topic-content"></div>
   </div>
 </template>
@@ -132,6 +146,7 @@ const routeParams = route.params
   font-weight: 700;
   margin-bottom: 1.5rem;
 }
+
 .topic-content h2 {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -139,14 +154,17 @@ const routeParams = route.params
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
+
 .topic-content p {
   margin-bottom: 1rem;
 }
+
 .topic-content ul {
   list-style-type: disc;
   padding-left: 1.5rem;
   margin-bottom: 1.5rem;
 }
+
 .topic-content li {
   margin-bottom: 0.5rem;
 }

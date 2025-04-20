@@ -41,7 +41,3 @@ const toggleSidebar = () => {
     <Footer />
   </div>
 </template>
-
-<style>
-@import './style.css';
-</style>

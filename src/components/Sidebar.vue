@@ -8,37 +8,32 @@ const closeSidebar = () => {
   emit('close-sidebar')
 }
 
+// Cập nhật cấu trúc categories theo lộ trình mới
 const categories = [
   {
-    title: 'Kiến thức nền tảng',
+    title: 'Lộ trình căn bản (tối thiểu)',
     items: [
-      { name: 'HTML cơ bản', path: '/basics/html' },
-      { name: 'CSS cơ bản', path: '/basics/css' },
-      { name: 'JavaScript cơ bản', path: '/basics/javascript' },
-      { name: 'Git & GitHub', path: '/basics/git' },
-      { name: 'Terminal/Command Line', path: '/basics/terminal' },
+      { name: 'HTML & CSS', path: '/basics/html-css' }, // Gộp HTML & CSS
+      { name: 'JavaScript', path: '/basics/javascript' },
+      { name: 'Công cụ phát triển', path: '/tools/overview' }, // Trang tổng quan công cụ
+      { name: 'Bulma', path: '/css/bulma' },
+      { name: 'Vue.js & Vite', path: '/vue/vite-setup' },
+      { name: 'Firebase (Frontend)', path: '/firebase/frontend-basics' },
     ]
   },
   {
-    title: 'Công cụ phát triển',
+    title: 'Lộ trình nâng cao',
     items: [
-      { name: 'Node.js & npm', path: '/tools/nodejs' },
-      { name: 'Visual Studio Code', path: '/tools/vscode' },
-      { name: 'Chrome DevTools', path: '/tools/devtools' },
+      { name: 'Vue Ecosystem (Router, Vuex)', path: '/vue/ecosystem' },
+      { name: 'Node.js', path: '/nodejs/introduction' },
+      { name: 'Firebase (Advanced)', path: '/firebase/advanced' },
+      { name: 'Tailwind CSS', path: '/css/tailwind' },
+      { name: 'Testing (Vitest)', path: '/testing/vitest' },
+      { name: 'TypeScript', path: '/typescript/introduction' },
+      { name: 'SSR/SSG (ViteSSG)', path: '/vue/ssg' },
     ]
   },
-  {
-    title: 'Vue.js',
-    items: [
-      { name: 'Khởi tạo dự án với Vite', path: '/vue/vite-setup' },
-      { name: 'Component và Props', path: '/vue/components' },
-      { name: 'Lifecycle hooks', path: '/vue/lifecycle' },
-      { name: 'Directives cơ bản', path: '/vue/directives' },
-      { name: 'Events và Event handling', path: '/vue/events' },
-      { name: 'Vue Router', path: '/vue/router' },
-      { name: 'Vuex/Pinia cơ bản', path: '/vue/store' },
-    ]
-  },
+  // Thêm các danh mục khác nếu cần
 ]
 
 // Lọc danh sách các danh mục và bài học dựa trên từ khóa tìm kiếm
@@ -65,7 +60,7 @@ const filteredCategories = computed(() => {
 </script>
 
 <template>
-  <aside class="h-full md:py-6 md:pr-4 mb-8 md:mb-0 bg-white dark:bg-gray-900 overflow-y-auto">
+  <aside class="h-full md:py-6 md:pr-4 mb-8 md:mb-0 bg-white dark:bg-gray-900 overflow-y-auto border-r border-gray-200 dark:border-gray-700 pl-1">
     <!-- Header cho sidebar trên mobile với nút đóng -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 md:hidden">
       <h2 class="font-bold text-lg text-gray-900 dark:text-white">Menu</h2>
@@ -79,30 +74,32 @@ const filteredCategories = computed(() => {
     </div>
 
     <div class="p-4 md:p-0 md:sticky md:top-4 overflow-y-auto h-full">
-      <div class="mb-6">
+      <div class="mb-6 px-4 md:px-0">
         <input 
           v-model="searchQuery" 
           type="text" 
-          placeholder="Tìm kiếm..." 
+          placeholder="Tìm kiếm tài liệu..." 
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 text-gray-900 dark:text-white" 
         />
       </div>
 
-      <div v-for="(category, index) in filteredCategories" :key="index" class="mb-6">
-        <h3 class="font-medium text-lg mb-2 text-gray-800 dark:text-gray-200">{{ category.title }}</h3>
-        <ul class="space-y-2">
-          <li v-for="(item, itemIndex) in category.items" :key="itemIndex">
-            <!-- Thêm @click để đóng sidebar khi chọn mục trên mobile -->
-            <router-link 
-              :to="item.path" 
-              @click="closeSidebar"
-              class="block py-1 px-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              {{ item.name }}
-            </router-link>
-          </li>
-        </ul>
-      </div>
+      <nav class="px-4 md:px-0">
+        <div v-for="(category, index) in filteredCategories" :key="index" class="mb-6">
+          <h3 class="font-semibold text-sm uppercase tracking-wider mb-3 text-gray-500 dark:text-gray-400">{{ category.title }}</h3>
+          <ul class="space-y-1">
+            <li v-for="(item, itemIndex) in category.items" :key="itemIndex">
+              <router-link 
+                :to="item.path" 
+                @click="closeSidebar" 
+                class="block py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+                active-class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium"
+              >
+                {{ item.name }}
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
   </aside>
 </template>

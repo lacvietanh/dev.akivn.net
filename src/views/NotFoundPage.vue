@@ -1,9 +1,9 @@
 <script setup>
-import SEO from '../components/SEO.vue';
+import Head from '../components/Head.vue';
 </script>
 
 <template>
-  <SEO
+  <Head
     title="404 - Không tìm thấy trang | Dev.akivn.net"
     description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển."
     :url="'/404'"

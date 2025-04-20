@@ -2,20 +2,13 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import vitePrerender from './src/utils/prerender-plugin'
 import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  assetsInclude: ['**/*.md'],
   plugins: [
-    vue({
-      template: {
-        // Thêm các thuộc tính SEO mặc định
-        compilerOptions: {
-          isCustomElement: (tag) => ['meta', 'title', 'link'].includes(tag),
-        }
-      }
-    }),
+    vue(),
     vueJsx(), // Hỗ trợ JSX trong Vue
     viteStaticCopy({
       targets: [
@@ -24,8 +17,7 @@ export default defineConfig({
           dest: 'assets' // Copy nội dung markdown sang thư mục assets khi build
         }
       ]
-     }),
-    vitePrerender() // Áp dụng plugin pre-render
+    })
   ],
   resolve: {
     alias: {
@@ -44,9 +36,11 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vue: ['vue', 'vue-router'], // Tách riêng các thư viện lớn
-          // Let Vite handle other vendor chunks automatically
+        manualChunks: (id) => {
+          // Tách riêng các thư viện lớn
+          if (id.includes('node_modules/vue/') || id.includes('node_modules/vue-router/')) {
+            return 'vue';
+          }
         }
       }
     },
