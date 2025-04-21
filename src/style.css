@@ -15,71 +15,138 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Xóa các style mặc định không cần thiết bên dưới */
-/*
-a {
+/* Tag component styles */
+.tag {
+  display: inline-block;
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;   /* font-medium */
+  padding: 0.25rem 0.5rem; /* py-1 px-2 */
+  border-radius: 0.25rem; /* rounded */
+}
+
+/* Technology tag colors */
+.tag-vue { background-color: #42b883; color: #ffffff; }
+.tag-vite { background-color: #646cff; color: #ffffff; }
+.tag-html { background-color: #e34c26; color: #ffffff; }
+.tag-css { background-color: #2965f1; color: #ffffff; }
+.tag-js { background-color: #f7df1e; color: #000000; }
+.tag-bulma { background-color: #00d1b2; color: #ffffff; }
+.tag-firebase { background-color: #feca2b; color: #000000; }
+.tag-nginx { background-color: #269539; color: #ffffff; }
+.tag-nodejs { background-color: #83cd29; color: #ffffff; }
+.tag-express { background-color: #000000; color: #ffffff; }
+.tag-websocket { background-color: #005f73; color: #ffffff; }
+.tag-cloudflarePages { background-color: #f46300; color: #ffffff; }
+.tag-minio { background-color: #ff6f00; color: #ffffff; }
+.tag-php { background-color: #777bb3; color: #ffffff; }
+.tag-flask { background-color: #000000; color: #ffffff; }
+.tag-python { background-color: #3776ab; color: #ffffff; }
+.tag-sqlite { background-color: #003b57; color: #ffffff; }
+.tag-viteSSG { background-color: #7e22ce; color: #ffffff; }
+.tag-tailwind { background-color: #38bdf8; color: #000000; }
+.tag-electronJS { background-color: #47848f; color: #ffffff; }
+.tag-electron-vite { background-color: #646cff; color: #ffffff; }
+.tag-tauri { background-color: #9e7517; color: #ffffff; }
+.tag-rust { background-color: #dea584; color: #000000; }
+.tag-bash { background-color: #89e051; color: #000000; }
+.tag-cmd { background-color: #ffffff; color: #000000; border: 1px solid #000000; }
+.tag-powershell { background-color: #012456; color: #ffffff; }
+
+/* Project status badge styles */
+.status-badge {
+  display: inline-block;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
 }
 
+.status-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-core {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-legacy {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-progress {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+}
+
+.status-partner {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+.status-paused {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Dark mode styles for status badges */
+@media (prefers-color-scheme: dark) {
+  .status-active {
+    background-color: #065f46;
+    color: #d1fae5;
+  }
+  
+  .status-core {
+    background-color: #1e3a8a;
+    color: #bfdbfe;
+  }
+  
+  .status-legacy {
+    background-color: #78350f;
+    color: #fef3c7;
+  }
+  
+  .status-progress {
+    background-color: #581c87;
+    color: #f3e8ff;
+  }
+  
+  .status-partner {
+    background-color: #7c2d12;
+    color: #ffedd5;
+  }
+  
+  .status-paused {
+    background-color: #374151;
+    color: #f3f4f6;
+  }
+}
+
+/* Basic body styling */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  background-color: #ffffff;
+  color: #111827;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-#app {
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+    color: #f9fafb;
   }
 }
-*/
 
-/* Thêm style cơ bản cho body nếu cần */
-body {
-  @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+/* Project URL style */
+.project-url {
+  font-size: 0.875rem;
+  color: #6b7280;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .project-url {
+    color: #9ca3af;
+  }
 }

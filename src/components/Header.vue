@@ -29,17 +29,18 @@ const toggleSidebar = () => {
         </a>
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
-        <button @click="toggleDarkMode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+        <button @click="toggleDarkMode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+          title="Toggle Dark Mode">
           <i class="fas fa-moon dark:fas fa-sun text-gray-600 dark:text-gray-300"></i>
         </button>
-        <!-- Ẩn text trên mobile, chỉ hiện trên tablet/desktop -->
-        <a href="https://akivn.net" target="_blank"
-          class="hidden sm:inline text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-          AkiNet
-        </a>
         <a href="https://github.com/lacvietanh/dev.akivn.net" target="_blank"
-          class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+          class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+          title="GitHub Repository">
           <i class="fab fa-github"></i>
+        </a>
+        <a href="https://akivn.net" target="_blank"
+          class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" title="AkiNet">
+          <img src="/img/icon-akinet-64.png" alt="AkiNet" class="h-6 w-6 rounded-full">
         </a>
       </div>
     </div>

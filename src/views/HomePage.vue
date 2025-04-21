@@ -1,106 +1,228 @@
 <script setup>
 import Head from '../components/Head.vue';
+
+const projects = [
+  { title: 'AkiNet', url: 'akivn.net', link: 'https://akivn.net', desc: 'Trang tổng để quản lý tài khoản chung của mọi dự án khác, mạng xã hội kèm các công cụ tiện ích dành cho mọi đối tượng sản xuất media <dự kiến>.', status: 'active', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'firebase'] },
+  { title: 'AkiApp', url: 'app.akivn.net', link: 'https://app.akivn.net', desc: 'Trang tổng các app/miniapp/webapp tiện ích sử dụng trực tiếp hoặc giới thiệu, hướng dẫn, tải về cho mọi app trong hệ sinh thái AkiNet.', status: 'active', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'firebase', 'nginx', 'nodejs', 'express', 'websocket', 'cloudflarePages'] },
+  { title: 'AkiCloud', url: 'cloud.akivn.net', link: 'https://cloud.akivn.net', desc: 'Chia sẻ tài nguyên công khai (hoặc cloud riêng tư cho một nhóm làm việc tiện lợi trên AkiNet).', status: 'core', tags: ['html', 'css', 'js', 'bulma', 'vue', 'minio', 'nginx', 'php'] },
+  { title: 'AkiDEV', url: 'dev.akivn.net', link: 'https://dev.akivn.net', desc: 'Trang tài liệu kỹ thuật tiếng việt, lộ trình học công nghệ web hiện đại và những công nghệ dùng trong AkiNet.', status: 'active', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG'] },
+  { title: 'AkiSpleeter', url: 'tool.akivn.net/tachnhac', link: 'https://tool.akivn.net/tachnhac', desc: 'Trang tách nhạc v1, tải nhạc trực tuyến từ link nhạc/video của các nền tảng, sẽ sớm được tích hợp như một lựa chọn trong tách nhạc v2 vì trang này đang dùng những công nghệ cũ khó mở rộng.', status: 'legacy', tags: ['html', 'css', 'js', 'bulma', 'flask', 'php', 'python', 'sqlite', 'firebase'] },
+  { title: 'TachNhacv2', url: 'tachnhac.akivn.net', link: 'https://tachnhac.akivn.net', desc: 'Đang triển khai như một trang riêng, sẽ có khả năng nhúng vào trang AkiApp. Sử dụng API của Music.Ai thay vì spleeter, cho khả năng xử lý âm thanh, âm nhạc tuyệt đỉnh nhất so với các công nghệ hiện tại.', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'flask', 'python', 'express', 'firebase'] },
+  {
+    title: 'Oscar Studio',
+    url: 'studio.oscarfamily.vn',
+    link: 'https://studio.oscarfamily.vn',
+    desc: 'Website của OSCAR ENTERTAINMENT - Dịch vụ sản xuất âm nhạc/media toàn diện, - Đối tác quan trọng của AkiNet. Lạc Việt Anh (sáng lập AkiNet) từ một người sản xuất âm nhạc rút lui về học & phát triển công nghệ để phục vụ ngược lại các đối tượng sản xuất âm nhạc, trong đó có Oscar Entertainment (do Lạc Quốc Huy sáng lập và vận hành) là dự án studio tâm huyết mà 2 anh em muốn phát triển lớn mạnh.',
+    status: 'partner',
+    tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase']
+  },
+  { title: 'LopNhac', url: 'lopnhac.akivn.net', link: 'https://lopnhac.akivn.net', desc: 'Nền tảng phục vụ đối tượng dạy và học nhạc dành riêng cho thị trường Việt Nam, dễ dàng quản lý đến từng chi tiết (lịch học, học viên, học phí, tiến trình học của từng học viên) chỉ bằng kéo thả trực quan. Hậu thuẫn bởi sự đầu tư và cố vấn của anh Đặng Phúc Thịnh (Một nhà sản xuất âm nhạc - với khả năng giảng dạy tuyệt vời - đến từ Hội An).', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase'] },
+  { title: 'VST Shop', url: 'vstshop.com', link: 'https://vstshop.com', desc: 'Web/App phục vụ mọi thứ liên quan đến VST (nhạc cụ ảo - Virtual Studio Technology) Tìm kiếm và cài đặt tiện lợi chỉ với 1 click, cài đặt hàng loạt, gỡ bỏ sạch sẽ, quản lý tài nguyên và thư viện tiện lợi, chia sẻ kiến thức về VST/Plugins, sản xuất âm nhạc, Samples, Presets, Project,... App build cho cả nền tảng MacOS và Windows.', status: 'active', tags: ['tauri', 'vue', 'vite', 'html', 'css', 'js', 'tailwind', 'minio', 'nginx', 'express', 'websocket', 'firebase', 'rust', 'bash', 'cmd', 'powershell', 'cloudflarePages'] },
+  { title: 'AkiWorkflow', url: 'akiworkflow.com', link: 'https://akiworkflow.com', desc: 'Hệ sinh thái phần mềm toàn diện cho sản xuất âm nhạc trên máy tính Mac. Hiện có 48 thành viên chính thức, là người Việt đến từ nhiều nơi (Chủ yếu là Hà Nội, Sài Gòn, Hàn, Nhật, Phi).', status: 'active', tags: ['vue', 'html', 'css', 'js', 'bulma', 'php', 'electronJS'] },
+  { title: 'AkiWorkflow v2', url: 'app.akiworkflow.com', link: 'https://app.akiworkflow.com', desc: 'Phiên bản mới của AkiWorkflow, tích hợp tính năng nâng cao và hiệu năng cao hơn.', status: 'progress', tags: ['tauri', 'vue', 'vite', 'html', 'css', 'js', 'tailwind', 'express', 'websocket', 'firebase', 'rust', 'bash'] },
+  { title: 'Aki Chord Ultra', url: 'akichord.com', link: 'https://akichord.com', desc: 'Web/App hợp âm siêu cấp, sử dụng công nghệ AI để nhận diện hợp âm, chuyển đổi hiển thị hợp âm cơ bản đến nâng cao và transpose thời gian thực, chia sẻ 50% lợi nhuận cho những người tiên phong (những người gửi yêu cầu xử lý đầu tiên của một bài hát mới trên nền tảng)', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'express', 'minio', 'firebase', ] },
+  { title: 'Aki NimoJackpot', url: 'github.com/lacvietanh/AkiAuto-NimoJackpot', link: 'https://github.com/lacvietanh/AkiAuto-NimoJackpot', desc: 'Công cụ tự động cho nền tảng Nimo TV.', status: 'paused', tags: ['electronJS'] },
+  { title: 'Aki TeleAuto', url: 'github.com/lacvietanh/AkiTeleAuto', link: 'https://github.com/lacvietanh/AkiTeleAuto', desc: 'App Auto cho Telegram miniApp phục vụ đối tượng "chơi Airdrop", quản lý nhiều tài khoản, tự động hóa nhiệm vụ...', status: 'paused', tags: ['electron-vite'] },
+  { title: 'THPT Nghia Minh', url: 'thptnghiaminh.akivn.net', link: 'https://thptnghiaminh.akivn.net/', desc: 'Website thư viện số cho trường THPT Nghia Minh.', status: 'paused', tags: ['html', 'css', 'js', 'php'] }
+];
 </script>
 
 <template>
-  <Head 
-    title="Dev.akivn.net - Tài liệu kỹ thuật tiếng Việt"
-    description="Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ khác được sử dụng tại Akinet."
-    keywords="vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind"
-  />
+
+  <Head title="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet"
+    description="Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ Web/App hiện đại khác mà AkiNet sử dụng."
+    keywords="vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind" />
   <div class="space-y-12 md:space-y-16">
     <!-- Hero Section -->
-    <section class="text-center pt-8 pb-12 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-sm">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-gray-800 dark:text-gray-100">Chào mừng đến AkiNet Devs</h1>
+    <section
+      class="text-center pt-8 pb-12 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-sm">
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-gray-800 dark:text-gray-100">Chào mừng đến AkiNet Devs
+      </h1>
       <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
-        Trang tài liệu kỹ thuật tiếng Việt dành cho nhân viên và học viên của Akinet. Khám phá các hướng dẫn và tài liệu về công nghệ web hiện đại.
+        Trang tài liệu kỹ thuật Tiếng Việt dành cho nhân viên và học viên của AkiNet.
+        <br> Khám phá các hướng dẫn và tài liệu về <b>công nghệ Web/App hiện đại</b> dùng trong AkiNet.
       </p>
     </section>
 
     <!-- Learning Roadmap Section -->
     <section id="learning-roadmap" class="scroll-mt-16">
-      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200">Lộ trình học tập</h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        
+      <h2 class="text-3xl font-bold text-center mb-4 text-gray-800 dark:text-gray-200">Lộ trình học tập</h2>
+      <p class="mb-6 text-center italic text-gray-700 dark:text-gray-300">
+        Hệ sinh thái AkiNet bao gồm nhiều công nghệ hiện đại, trải dài từ phát triển frontend đến backend và ứng dụng
+        desktop/mobile.
+      </p>
+      <div class="grid md:grid-cols-3 gap-3">
+
         <!-- Basic Roadmap -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
           <h3 class="text-2xl font-semibold mb-4 text-blue-700 dark:text-blue-400">Lộ trình căn bản (tối thiểu)</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-6">Những kiến thức và công cụ nền tảng bạn cần nắm vững để làm việc với frontend:</p>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">Những kiến thức và công cụ nền tảng bạn cần nắm vững để làm
+            việc với frontend:</p>
           <ul class="space-y-3 list-disc list-inside text-gray-700 dark:text-gray-300">
-            <li><strong>HTML & CSS:</strong> Ngôn ngữ xây dựng cấu trúc và giao diện web.</li>
-            <li><strong>JavaScript:</strong> Ngôn ngữ lập trình thiết yếu cho web tương tác.</li>
-            <li><strong>Công cụ phát triển:</strong> VS Code (Editor), Git (Version Control), Node.js/npm (Runtime & Package Manager).</li>
-            <li><strong>Bulma:</strong> Framework CSS chính, dựa trên Flexbox, giúp xây dựng giao diện nhanh chóng.</li>
+            <li><strong>HTML & CSS:</strong> Ngôn ngữ cho cấu trúc và giao diện web.</li>
+            <li><strong>JavaScript:</strong> Ngôn ngữ thiết yếu cho web tương tác.</li>
+            <li><strong>Công cụ phát triển:</strong> VS Code (Editor), Git (Version Control), Node.js/npm (Runtime &
+              Package Manager).</li>
+            <li><strong>Bulma (CSS Library):</strong> Framework CSS chính của AkiNet, linh hoạt, dễ sử dụng, tùy biến
+              cao.</li>
             <li><strong>Vue.js (với Vite):</strong> Framework JavaScript hiện đại, hiệu năng cao để xây dựng UI.</li>
-            <li><strong>Firebase (Frontend):</strong> Sử dụng các dịch vụ cơ bản như Authentication (Xác thực), Firestore (Database NoSQL), Cloud Storage (Lưu trữ file) từ phía client.</li>
+            <li><strong>Firebase (Frontend):</strong> Sử dụng các dịch vụ cơ bản như Authentication (Xác thực),
+              Firestore (Database NoSQL), Cloud Storage (Lưu trữ file) từ phía client.</li>
+            <li><strong>HTTP & RESTful API:</strong> Giao thức web và thiết kế API.</li>
           </ul>
         </div>
 
         <!-- Advanced Roadmap -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
           <h3 class="text-2xl font-semibold mb-4 text-green-700 dark:text-green-400">Lộ trình nâng cao</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-6">Đi sâu hơn vào hệ sinh thái, backend và các kỹ thuật nâng cao:</p>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">Đi sâu hơn vào hệ sinh thái, backend và các kỹ thuật nâng
+            cao:</p>
           <ul class="space-y-3 list-disc list-inside text-gray-700 dark:text-gray-300">
             <li><strong>Vue Ecosystem:</strong> Vue Router (Định tuyến), Vuex (Quản lý trạng thái tập trung).</li>
-            <li><strong>Node.js:</strong> Xây dựng backend, API và xử lý logic phía server.</li>
+            <li><strong>NodeJS, Websocket:</strong> Xây dựng backend, API và xử lý logic phía server.</li>
             <li><strong>Firebase (Advanced):</strong> Cloud Functions (Backend logic), Security Rules nâng cao..</li>
-            <li><strong>Tailwind CSS:</strong> Framework CSS Utility-first, sử dụng để tùy chỉnh chi tiết (dùng phụ trợ).</li>
+            <li><strong>SSR/SSG (ViteSSG):</strong> Tối ưu hóa SEO và tốc độ tải trang với Server-Side Rendering và Static Site Generation.</li>
+            <li><strong>Tauri (Framework):</strong> Xây dựng ứng dụng desktop/mobile đa nền tảng với công nghệ web làm UI và RUST làm backend.</li>
+            <li><strong>ElectronJS:</strong> Xây dựng ứng dụng desktop với JavaScript, HTML và CSS.</li>
+          </ul>
+        </div>
+        
+        <!-- Optional Roadmap -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+          <h3 class="text-2xl font-semibold mb-4 text-purple-700 dark:text-purple-400">Lộ trình tùy chọn</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">Các công nghệ và kỹ năng bổ sung có thể học tùy theo nhu cầu:
+          </p>
+          <ul class="space-y-3 list-disc list-inside text-gray-700 dark:text-gray-300">
+            <li><strong>AI & Nghệ thuật Prompt:</strong> Sử dụng các công cụ AI để tăng năng suất lập trình.</li>
+            <li><strong>SEO (Tối ưu tìm kiếm):</strong> Kỹ thuật tối ưu để tăng thứ hạng tìm kiếm.</li>
+            <li><strong>Electron-Vite:</strong> Kết hợp Electron với Vite để phát triển ứng dụng desktop hiệu suất cao.</li>
+            <li><strong>Rust:</strong> Ngôn ngữ lập trình hệ thống hiệu suất cao, cũng chính là phần backend của Tauri.</li>
+            <li><strong>Tailwind (CSS Library):</strong> Framework CSS Utility-first, linh hoạt và tùy biến cao.</li>
             <li><strong>Testing:</strong> Vitest/Vue Test Utils để đảm bảo chất lượng mã nguồn.</li>
             <li><strong>TypeScript:</strong> Bổ sung kiểu tĩnh cho JavaScript, tăng độ tin cậy cho dự án lớn.</li>
-             <li><strong>SSR/SSG:</strong> Kỹ thuật tối ưu hóa hiệu suất và SEO (ví dụ: ViteSSG).</li>
           </ul>
         </div>
       </div>
     </section>
 
+    <!-- Projects Section -->
+    <section id="current-projects" class="scroll-mt-16">
+      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200">Các dự án đang tiến hành</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div v-for="project in projects" :key="project.title"
+          class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                <a :href="project.link" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">{{
+                  project.title }}</a>
+              </h3>
+              <a :href="project.link" target="_blank" class="project-url hover:underline">{{ project.url }}</a>
+            </div>
+            <span :class="['status-badge', 'status-' + project.status]">
+              {{ project.status === 'active' ? 'Active' :
+                project.status === 'core' ? 'Core' :
+                  project.status === 'legacy' ? 'Legacy' :
+                    project.status === 'progress' ? 'In Progress' :
+                      project.status === 'partner' ? 'Partner' : 'Paused' }}
+            </span>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 mb-4 flex-grow">{{ project.desc }}</p>
+          <div class="flex flex-wrap gap-2 mt-auto pt-2">
+            <span v-for="tag in project.tags" :key="tag" :class="['tag', 'tag-' + tag]">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Featured Technologies Section -->
-    <section>
+    <section id="technologies" class="scroll-mt-16">
       <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200">Công nghệ nổi bật</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+
         <!-- HTML/CSS Card -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">HTML & CSS</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Nền tảng không thể thiếu của mọi trang web, định hình cấu trúc và giao diện.</p>
-          <router-link to="/basics/html" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Nền tảng không thể thiếu của mọi trang web, định hình cấu
+            trúc và giao diện.</p>
+          <router-link to="/basics/html" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu
+            thêm →</router-link>
         </div>
 
         <!-- JavaScript Card -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">JavaScript</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Ngôn ngữ lập trình của web, tạo ra sự tương tác và tính năng động.</p>
-          <router-link to="/basics/javascript" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Ngôn ngữ lập trình của web, tạo ra sự tương tác và tính năng
+            động.</p>
+          <router-link to="/basics/javascript" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm
+            hiểu thêm →</router-link>
         </div>
 
         <!-- Vue.js Card -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Vue.js & Vite</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework JavaScript tiến bộ và công cụ build siêu tốc cho trải nghiệm phát triển mượt mà.</p>
-          <router-link to="/vue/vite-setup" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework JavaScript tiến bộ và công cụ build siêu tốc cho
+            trải nghiệm phát triển mượt mà.</p>
+          <router-link to="/vue/vite-setup" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm
+            hiểu thêm →</router-link>
         </div>
 
         <!-- Bulma Card -->
-         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Bulma</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework CSS hiện đại, dễ sử dụng, dựa trên Flexbox, là lựa chọn chính tại Akinet.</p>
-          <router-link to="/css/bulma" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link> <!-- Adjust link later -->
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework CSS hiện đại, dễ sử dụng, dựa trên Flexbox, là lựa
+            chọn chính tại Akinet.</p>
+          <router-link to="/css/bulma" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu
+            thêm →</router-link> <!-- Adjust link later -->
         </div>
 
         <!-- Firebase Card -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Firebase</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Nền tảng mạnh mẽ từ Google giúp xây dựng backend, quản lý dữ liệu và xác thực người dùng.</p>
-          <router-link to="/firebase/introduction" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link> <!-- Adjust link later -->
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Nền tảng mạnh mẽ từ Google giúp xây dựng backend, quản lý dữ
+            liệu và xác thực người dùng.</p>
+          <router-link to="/firebase/introduction"
+            class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link>
+          <!-- Adjust link later -->
         </div>
-        
+
         <!-- Tailwind CSS Card -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
           <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Tailwind CSS</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework Utility-first linh hoạt, dùng để tinh chỉnh giao diện khi cần thiết.</p>
-          <router-link to="/css/tailwind" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu thêm →</router-link>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework Utility-first linh hoạt, dùng để tinh chỉnh giao
+            diện khi cần thiết.</p>
+          <router-link to="/css/tailwind" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu
+            thêm →</router-link>
+        </div>
+
+        <!-- SEO Card -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">SEO (Tối ưu tìm kiếm)</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Các kỹ thuật tối ưu website để đạt thứ hạng cao hơn trong kết
+            quả tìm kiếm.</p>
+          <router-link to="/SEO/introduction" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm
+            hiểu
+            thêm →</router-link>
+        </div>
+        <!-- AI & Prompt Card -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">AI & Nghệ thuật Prompt</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Tận dụng sức mạnh của trí tuệ nhân tạo để tăng năng suất và
+            sáng tạo trong phát triển phần mềm.</p>
+          <router-link to="/ai/prompt" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm hiểu
+            thêm →</router-link>
+        </div>
+        <!-- Tauri Card -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Tauri</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Framework tạo ứng dụng desktop và mobile siêu nhỏ gọn, hiệu
+            năng cao với giao diện web và lõi Rust.</p>
+          <router-link to="/tauri/introduction" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Tìm
+            hiểu thêm →</router-link>
         </div>
 
       </div>
     </section>
+
   </div>
 </template>

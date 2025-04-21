@@ -37,9 +37,9 @@ dev.akivn.net/
 │   ├── assets/           # Hình ảnh, fonts...
 │   ├── components/       # Components dùng chung (Header, Footer, Sidebar, Head...)
 │   ├── content/          # Nội dung bài học (Markdown files)
-│   ├── router/           # Cấu hình Vue Router (index.js)
+│   ├── router.js         # Cấu hình Vue Router
 │   ├── stores/           # Cấu hình Vuex (nếu dùng)
-│   ├── styles/           # CSS toàn cục (style.css)
+│   ├── style.css         # CSS toàn cục
 │   ├── utils/            # Các hàm tiện ích (generate-sitemap.js)
 │   ├── views/            # Components cho các trang (HomePage, TopicPage, NotFoundPage)
 │   ├── App.vue           # Component gốc của ứng dụng
@@ -58,18 +58,27 @@ dev.akivn.net/
 - **HTML & CSS**: Nền tảng web.
 - **JavaScript**: Ngôn ngữ lập trình web.
 - **Công cụ phát triển**: VS Code, Git, Node.js/npm.
-- **Bulma**: Framework CSS chính.
+- **Bulma (CSS Library)**: Framework CSS chính.
+- **HTTP & RESTful API**: Giao thức web và thiết kế API.
 - **Vue.js (với Vite)**: Framework JavaScript.
 - **Firebase (Frontend)**: Auth, Firestore, Storage.
 
 ### 2. Lộ trình nâng cao
 - **Vue Ecosystem**: Vue Router, Vuex.
-- **Node.js**: Backend development.
+- **NodeJS, Websocket**: Backend development.
 - **Firebase (Advanced)**: Cloud Functions, Security Rules.
-- **Tailwind CSS**: Utility-first CSS.
+- **SSR/SSG**: Tối ưu hóa hiệu suất/SEO (ViteSSG).
+- **Tauri (Framework)**: Xây dựng ứng dụng desktop.
+- **ElectronJS**: Xây dựng ứng dụng desktop với công nghệ web.
+
+### 3. Lộ trình tùy chọn
+- **AI & Nghệ thuật Prompt**: Sử dụng AI tăng năng suất.
+- **SEO (Tối ưu tìm kiếm)**: Kỹ thuật tối ưu tìm kiếm.
+- **Electron-Vite**: Kết hợp Electron với Vite để phát triển desktop app.
+- **Rust**: Ngôn ngữ lập trình hệ thống, backend của Tauri.
+- **Tailwind (CSS Library)**: Utility-first CSS.
 - **Testing**: Vitest/Vue Test Utils.
 - **TypeScript**: Static typing.
-- **SSR/SSG**: Tối ưu hóa hiệu suất/SEO (ViteSSG).
 
 ## Trạng thái dự án (20/04/2025)
 

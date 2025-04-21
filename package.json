@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite-ssg build",
-    "preview": "vite preview",
-    "generate": "vite-ssg build && node src/utils/generate-sitemap.js"
+    "build": "vite-ssg build && node src/utils/generate-sitemap.js",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@unhead/vue": "^1.8.10",

@@ -1,13 +1,14 @@
-import HomePage from '../views/HomePage.vue'
+// filepath: /Volumes/DATA/DEV/www/dev.akivn.net/src/router.js
+import HomePage from './views/HomePage.vue'
 
 // Dynamically import all markdown files from content directory
-const modules = import.meta.glob('../content/**/*.md')
+const modules = import.meta.glob('./content/**/*.md')
 
 // Function to generate routes from markdown files
 const generateRoutesFromModules = () => {
   const contentRoutes = []
   for (const path in modules) {
-    const match = path.match(/\.\.\/content\/(.*)\/(.*)\.md$/)
+    const match = path.match(/\.\/content\/(.*)\/(.*)\.md$/)
     if (match) {
       const category = match[1]
       const topic = match[2]
@@ -18,7 +19,7 @@ const generateRoutesFromModules = () => {
       contentRoutes.push({
         path: routePath,
         name: routeName,
-        component: () => import('../views/TopicPage.vue'),
+        component: () => import('./views/TopicPage.vue'),
         meta: {
           // You might want to dynamically load meta from markdown frontmatter later
           description: `Tài liệu về ${topic} trong ${category}`
@@ -36,8 +37,8 @@ export const routes = [
     name: 'Home',
     component: HomePage,
     meta: {
-      title: 'Dev.akivn.net - Tài liệu kỹ thuật tiếng Việt',
-      description: 'Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ khác được sử dụng tại Akinet.'
+      title: 'AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet',
+      description: 'AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet. Lộ trình lập trình web/app cơ bản đến nâng cao cho học viên và nhân viên'
     }
   },
   // Add dynamically generated routes
@@ -47,9 +48,9 @@ export const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../views/NotFoundPage.vue'),
+    component: () => import('./views/NotFoundPage.vue'),
     meta: {
-      title: '404 - Không tìm thấy trang | Dev.akivn.net',
+      title: '404 - Không tìm thấy trang | AkiDev',
       description: 'Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.'
     }
   }
