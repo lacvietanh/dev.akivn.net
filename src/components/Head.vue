@@ -5,15 +5,15 @@ import { useHead } from '@unhead/vue'
 const props = defineProps({
   title: {
     type: String,
-    default: 'Dev.akivn.net - Tài liệu kỹ thuật tiếng Việt'
+    default: 'AkiDEV | DEV.AkiVN.Net | Trang tài liệu lập trình tiếng Việt cho công nghệ web/app hiện đại dùng trong AkiNet'
   },
   description: {
     type: String,
-    default: 'Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Tailwind, và các công nghệ khác được sử dụng tại Akinet.'
+    default: 'Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ Web/App hiện đại khác mà AkiNet sử dụng. Học lập trình với ví dụ mã nguồn và hướng dẫn chi tiết bằng tiếng Việt.'
   },
   keywords: {
     type: String,
-    default: 'vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs'
+    default: 'vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind'
   },
   url: {
     type: String,
@@ -41,13 +41,13 @@ useHead({
     { property: 'og:url', content: canonicalUrl },
     { property: 'og:title', content: computed(() => props.title) },
     { property: 'og:description', content: computed(() => props.description) },
-    { property: 'og:image', content: 'https://dev.akivn.net/logo.png' },
+    { property: 'og:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
     // Twitter
     { property: 'twitter:card', content: 'summary_large_image' },
     { property: 'twitter:url', content: canonicalUrl },
     { property: 'twitter:title', content: computed(() => props.title) },
     { property: 'twitter:description', content: computed(() => props.description) },
-    { property: 'twitter:image', content: 'https://dev.akivn.net/logo.png' },
+    { property: 'twitter:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
     // Other
     { name: 'author', content: 'Akinet' },
     { name: 'robots', content: 'index, follow' },

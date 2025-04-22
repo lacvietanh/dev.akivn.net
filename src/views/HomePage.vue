@@ -22,7 +22,7 @@ const projects = [
 
 <template>
 
-  <Head title="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet"
+  <Head title="AkiDEV | DEV.AkiVN.Net | Trang tài liệu lập trình tiếng Việt cho công nghệ web/app hiện đại dùng trong AkiNet"
     description="Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ Web/App hiện đại khác mà AkiNet sử dụng."
     keywords="vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind" />
   <div class="space-y-12 md:space-y-16">
@@ -32,8 +32,9 @@ const projects = [
       <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-gray-800 dark:text-gray-100">Chào mừng đến AkiNet Devs
       </h1>
       <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
-        Trang tài liệu kỹ thuật Tiếng Việt dành cho nhân viên và học viên của AkiNet.
-        <br> Khám phá các hướng dẫn và tài liệu về <b>công nghệ Web/App hiện đại</b> dùng trong AkiNet.
+        Trang tài liệu lập trình tiếng Việt cho công nghệ web/app hiện đại dùng trong AkiNet.
+        <br>
+        <span>Khám phá các hướng dẫn code <b>Web/App hiện đại</b> dùng trong AkiNet.</span>
       </p>
     </section>
 
@@ -41,8 +42,7 @@ const projects = [
     <section id="learning-roadmap" class="scroll-mt-16">
       <h2 class="text-3xl font-bold text-center mb-4 text-gray-800 dark:text-gray-200">Lộ trình học tập</h2>
       <p class="mb-6 text-center italic text-gray-700 dark:text-gray-300">
-        Hệ sinh thái AkiNet bao gồm nhiều công nghệ hiện đại, trải dài từ phát triển frontend đến backend và ứng dụng
-        desktop/mobile.
+        Hệ sinh thái AkiNet bao gồm nhiều công nghệ hiện đại, trải dài từ phát triển frontend đến backend và ứng dụng desktop/mobile.
       </p>
       <div class="grid md:grid-cols-3 gap-3">
 
