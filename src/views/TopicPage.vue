@@ -129,7 +129,7 @@ watch(() => route.path, loadTopicContent);
 <template>
 
   <Head :title="seoTitle" :description="seoDescription" :keywords="seoKeywords" />
-  <div class="prose dark:prose-invert max-w-none">
+  <div class="prose dark:prose-invert max-w-none text-gray-900 dark:text-gray-100">
     <div v-if="isLoading" class="py-8 flex justify-center">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>

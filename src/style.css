@@ -31,7 +31,7 @@
 .tag-css { background-color: #2965f1; color: #ffffff; }
 .tag-js { background-color: #f7df1e; color: #000000; }
 .tag-bulma { background-color: #00d1b2; color: #ffffff; }
-.tag-firebase { background-color: #feca2b; color: #000000; }
+.tag-firebase { background-color: #febf2b; color: #000000; }
 .tag-nginx { background-color: #269539; color: #ffffff; }
 .tag-nodejs { background-color: #83cd29; color: #ffffff; }
 .tag-express { background-color: #000000; color: #ffffff; }
@@ -91,62 +91,10 @@
   color: #1f2937;
 }
 
-/* Dark mode styles for status badges */
-@media (prefers-color-scheme: dark) {
-  .status-active {
-    background-color: #065f46;
-    color: #d1fae5;
-  }
-  
-  .status-core {
-    background-color: #1e3a8a;
-    color: #bfdbfe;
-  }
-  
-  .status-legacy {
-    background-color: #78350f;
-    color: #fef3c7;
-  }
-  
-  .status-progress {
-    background-color: #581c87;
-    color: #f3e8ff;
-  }
-  
-  .status-partner {
-    background-color: #7c2d12;
-    color: #ffedd5;
-  }
-  
-  .status-paused {
-    background-color: #374151;
-    color: #f3f4f6;
-  }
-}
-
-/* Basic body styling */
-body {
-  background-color: #ffffff;
-  color: #111827;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #111827;
-    color: #f9fafb;
-  }
-}
-
 /* Project URL style */
 .project-url {
   font-size: 0.875rem;
   color: #6b7280;
   display: inline-block;
   margin-top: 0.25rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .project-url {
-    color: #9ca3af;
-  }
 }

@@ -6,24 +6,17 @@ const projects = [
   { title: 'AkiApp', url: 'app.akivn.net', link: 'https://app.akivn.net', desc: 'Trang tổng các app/miniapp/webapp tiện ích sử dụng trực tiếp hoặc giới thiệu, hướng dẫn, tải về cho mọi app trong hệ sinh thái AkiNet.', status: 'active', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'firebase', 'nginx', 'nodejs', 'express', 'websocket', 'cloudflarePages'] },
   { title: 'AkiCloud', url: 'cloud.akivn.net', link: 'https://cloud.akivn.net', desc: 'Chia sẻ tài nguyên công khai (hoặc cloud riêng tư cho một nhóm làm việc tiện lợi trên AkiNet).', status: 'core', tags: ['html', 'css', 'js', 'bulma', 'vue', 'minio', 'nginx', 'php'] },
   { title: 'AkiDEV', url: 'dev.akivn.net', link: 'https://dev.akivn.net', desc: 'Trang tài liệu kỹ thuật tiếng việt, lộ trình học công nghệ web hiện đại và những công nghệ dùng trong AkiNet.', status: 'active', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG'] },
-  { title: 'AkiSpleeter', url: 'tool.akivn.net/tachnhac', link: 'https://tool.akivn.net/tachnhac', desc: 'Trang tách nhạc v1, tải nhạc trực tuyến từ link nhạc/video của các nền tảng, sẽ sớm được tích hợp như một lựa chọn trong tách nhạc v2 vì trang này đang dùng những công nghệ cũ khó mở rộng.', status: 'legacy', tags: ['html', 'css', 'js', 'bulma', 'flask', 'php', 'python', 'sqlite', 'firebase'] },
-  { title: 'TachNhacv2', url: 'tachnhac.akivn.net', link: 'https://tachnhac.akivn.net', desc: 'Đang triển khai như một trang riêng, sẽ có khả năng nhúng vào trang AkiApp. Sử dụng API của Music.Ai thay vì spleeter, cho khả năng xử lý âm thanh, âm nhạc tuyệt đỉnh nhất so với các công nghệ hiện tại.', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'flask', 'python', 'express', 'firebase'] },
-  {
-    title: 'Oscar Studio',
-    url: 'studio.oscarfamily.vn',
-    link: 'https://studio.oscarfamily.vn',
-    desc: 'Website của OSCAR ENTERTAINMENT - Dịch vụ sản xuất âm nhạc/media toàn diện, - Đối tác quan trọng của AkiNet. Lạc Việt Anh (sáng lập AkiNet) từ một người sản xuất âm nhạc rút lui về học & phát triển công nghệ để phục vụ ngược lại các đối tượng sản xuất âm nhạc, trong đó có Oscar Entertainment (do Lạc Quốc Huy sáng lập và vận hành) là dự án studio tâm huyết mà 2 anh em muốn phát triển lớn mạnh.',
-    status: 'partner',
-    tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase']
-  },
+  { title: 'Aki Spleeter', url: 'tool.akivn.net/tachnhac', link: 'https://tool.akivn.net/tachnhac', desc: 'Trang tách nhạc v1, tải nhạc trực tuyến từ link nhạc/video của các nền tảng, sẽ sớm được tích hợp như một lựa chọn trong tách nhạc v2 vì trang này đang dùng những công nghệ cũ khó mở rộng.', status: 'legacy', tags: ['html', 'css', 'js', 'bulma', 'flask', 'php', 'python', 'sqlite', 'firebase'] },
+  { title: 'TachNhac v2', url: 'tachnhac.akivn.net', link: 'https://tachnhac.akivn.net', desc: 'Đang triển khai như một trang riêng, sẽ có khả năng nhúng vào trang AkiApp. Sử dụng API của Music.Ai thay vì spleeter, cho khả năng xử lý âm thanh, âm nhạc tuyệt đỉnh nhất so với các công nghệ hiện tại.', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'flask', 'python', 'express', 'firebase'] },
+  { title: 'Oscar Studio', url: 'studio.oscarfamily.vn', link: 'https://studio.oscarfamily.vn', desc: 'Website của OSCAR ENTERTAINMENT - Dịch vụ sản xuất âm nhạc/media toàn diện, - Đối tác quan trọng của AkiNet. Lạc Việt Anh (sáng lập AkiNet) từ một người sản xuất âm nhạc rút lui về học & phát triển công nghệ để phục vụ ngược lại các đối tượng sản xuất âm nhạc, trong đó có Oscar Entertainment (do Lạc Quốc Huy sáng lập và vận hành) là dự án studio tâm huyết mà 2 anh em muốn phát triển lớn mạnh.', status: 'partner', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase'] },
   { title: 'LopNhac', url: 'lopnhac.akivn.net', link: 'https://lopnhac.akivn.net', desc: 'Nền tảng phục vụ đối tượng dạy và học nhạc dành riêng cho thị trường Việt Nam, dễ dàng quản lý đến từng chi tiết (lịch học, học viên, học phí, tiến trình học của từng học viên) chỉ bằng kéo thả trực quan. Hậu thuẫn bởi sự đầu tư và cố vấn của anh Đặng Phúc Thịnh (Một nhà sản xuất âm nhạc - với khả năng giảng dạy tuyệt vời - đến từ Hội An).', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase'] },
   { title: 'VST Shop', url: 'vstshop.com', link: 'https://vstshop.com', desc: 'Web/App phục vụ mọi thứ liên quan đến VST (nhạc cụ ảo - Virtual Studio Technology) Tìm kiếm và cài đặt tiện lợi chỉ với 1 click, cài đặt hàng loạt, gỡ bỏ sạch sẽ, quản lý tài nguyên và thư viện tiện lợi, chia sẻ kiến thức về VST/Plugins, sản xuất âm nhạc, Samples, Presets, Project,... App build cho cả nền tảng MacOS và Windows.', status: 'active', tags: ['tauri', 'vue', 'vite', 'html', 'css', 'js', 'tailwind', 'minio', 'nginx', 'express', 'websocket', 'firebase', 'rust', 'bash', 'cmd', 'powershell', 'cloudflarePages'] },
   { title: 'AkiWorkflow', url: 'akiworkflow.com', link: 'https://akiworkflow.com', desc: 'Hệ sinh thái phần mềm toàn diện cho sản xuất âm nhạc trên máy tính Mac. Hiện có 48 thành viên chính thức, là người Việt đến từ nhiều nơi (Chủ yếu là Hà Nội, Sài Gòn, Hàn, Nhật, Phi).', status: 'active', tags: ['vue', 'html', 'css', 'js', 'bulma', 'php', 'electronJS'] },
   { title: 'AkiWorkflow v2', url: 'app.akiworkflow.com', link: 'https://app.akiworkflow.com', desc: 'Phiên bản mới của AkiWorkflow, tích hợp tính năng nâng cao và hiệu năng cao hơn.', status: 'progress', tags: ['tauri', 'vue', 'vite', 'html', 'css', 'js', 'tailwind', 'express', 'websocket', 'firebase', 'rust', 'bash'] },
-  { title: 'Aki Chord Ultra', url: 'akichord.com', link: 'https://akichord.com', desc: 'Web/App hợp âm siêu cấp, sử dụng công nghệ AI để nhận diện hợp âm, chuyển đổi hiển thị hợp âm cơ bản đến nâng cao và transpose thời gian thực, chia sẻ 50% lợi nhuận cho những người tiên phong (những người gửi yêu cầu xử lý đầu tiên của một bài hát mới trên nền tảng)', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'express', 'minio', 'firebase', ] },
-  { title: 'Aki NimoJackpot', url: 'github.com/lacvietanh/AkiAuto-NimoJackpot', link: 'https://github.com/lacvietanh/AkiAuto-NimoJackpot', desc: 'Công cụ tự động cho nền tảng Nimo TV.', status: 'paused', tags: ['electronJS'] },
-  { title: 'Aki TeleAuto', url: 'github.com/lacvietanh/AkiTeleAuto', link: 'https://github.com/lacvietanh/AkiTeleAuto', desc: 'App Auto cho Telegram miniApp phục vụ đối tượng "chơi Airdrop", quản lý nhiều tài khoản, tự động hóa nhiệm vụ...', status: 'paused', tags: ['electron-vite'] },
-  { title: 'THPT Nghia Minh', url: 'thptnghiaminh.akivn.net', link: 'https://thptnghiaminh.akivn.net/', desc: 'Website thư viện số cho trường THPT Nghia Minh.', status: 'paused', tags: ['html', 'css', 'js', 'php'] }
+  { title: 'Aki Chord Ultra', url: 'akichord.com', link: 'https://akichord.com', desc: 'Web/App hợp âm siêu cấp, sử dụng công nghệ AI để nhận diện hợp âm, chuyển đổi hiển thị hợp âm cơ bản đến nâng cao và transpose thời gian thực, chia sẻ 50% lợi nhuận cho những người tiên phong (những người gửi yêu cầu xử lý đầu tiên của một bài hát mới trên nền tảng)', status: 'progress', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'express', 'minio', 'firebase'] },
+  { title: 'Aki NimoJackpot', url: '', link: 'https://github.com/lacvietanh/AkiAuto-NimoJackpot', desc: 'Công cụ tự động cho nền tảng Nimo TV.', status: 'paused', tags: ['electronJS', 'html', 'css', 'js'] },
+  { title: 'Aki TeleAuto', url: '', link: 'https://github.com/lacvietanh/AkiTeleAuto', desc: 'App Auto cho Telegram miniApp phục vụ đối tượng "chơi Airdrop", quản lý nhiều tài khoản, tự động hóa nhiệm vụ...', status: 'paused', tags: ['electron-vite', 'html', 'css', 'js'] },
+  { title: 'THPT Nghia Minh', url: '', link: 'https://thptnghiaminh.akivn.net/', desc: 'Website thư viện số cho trường THPT Nghia Minh.', status: 'paused', tags: ['html', 'css', 'js', 'php'] }
 ];
 </script>
 
@@ -86,7 +79,7 @@ const projects = [
             <li><strong>ElectronJS:</strong> Xây dựng ứng dụng desktop với JavaScript, HTML và CSS.</li>
           </ul>
         </div>
-        
+
         <!-- Optional Roadmap -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
           <h3 class="text-2xl font-semibold mb-4 text-purple-700 dark:text-purple-400">Lộ trình tùy chọn</h3>
@@ -107,18 +100,17 @@ const projects = [
 
     <!-- Projects Section -->
     <section id="current-projects" class="scroll-mt-16">
-      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200">Các dự án đang tiến hành</h2>
+      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200"> Các dự án đang tiến hành </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div v-for="project in projects" :key="project.title"
-          class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+          class="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 flex flex-col h-full">
           <div class="flex items-start justify-between mb-3">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                <a :href="project.link" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">{{
-                  project.title }}</a>
-              </h3>
-              <a :href="project.link" target="_blank" class="project-url hover:underline">{{ project.url }}</a>
-            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+              <a :href="project.link" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">
+                {{ project.title }}
+              </a>
+            </h3>
+            <a :href="project.link" target="_blank" class="project-url hover:underline">{{ project.url }}</a>
             <span :class="['status-badge', 'status-' + project.status]">
               {{ project.status === 'active' ? 'Active' :
                 project.status === 'core' ? 'Core' :

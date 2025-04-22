@@ -72,14 +72,11 @@ const filteredCategories = computed(() => {
 </script>
 
 <template>
-  <aside
-    class="h-full md:py-6 md:pr-4 mb-8 md:mb-0 bg-white dark:bg-gray-900 overflow-y-auto border-r border-gray-200 dark:border-gray-700 pl-1">
+  <aside class="h-full md:py-6 md:pr-4 mb-8 md:mb-0 bg-white dark:bg-gray-900 overflow-y-auto border-r border-gray-200 dark:border-gray-700 pl-1">
     <!-- Mobile header -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 md:hidden">
       <h2 class="font-bold text-lg text-gray-900 dark:text-white">Menu</h2>
-      <button @click="closeSidebar"
-        class="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-        aria-label="Close menu">
+      <button @click="closeSidebar" class="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Close menu">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -93,8 +90,7 @@ const filteredCategories = computed(() => {
         <!-- Home link -->
         <ul class="mb-4">
           <li>
-            <router-link to="/" @click="closeSidebar"
-              class="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <router-link to="/" @click="closeSidebar" class="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               <i class="fas fa-home text-blue-500 w-5 mr-2"></i> Trang chủ
             </router-link>
           </li>
@@ -104,8 +100,7 @@ const filteredCategories = computed(() => {
             category.title }}</h3>
           <ul class="space-y-1">
             <li v-for="(item, idx) in category.items" :key="idx">
-              <router-link :to="item.path" @click="closeSidebar"
-                class="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <router-link :to="item.path" @click="closeSidebar" class="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <!-- Icon based on item name (example icons) -->
                 <i v-if="item.name.includes('HTML')" class="fab fa-html5 text-orange-600 w-5 mr-1"></i>
                 <i v-else-if="item.name.includes('JavaScript')" class="fab fa-js text-yellow-500 w-5 mr-1"></i>

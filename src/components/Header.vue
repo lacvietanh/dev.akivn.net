@@ -3,9 +3,14 @@ import { defineEmits } from 'vue'
 
 const emit = defineEmits(['toggle-sidebar'])
 
+// Toggle dark mode and update highlight.js theme link
 const toggleDarkMode = () => {
   const isDark = document.documentElement.classList.toggle('dark')
   localStorage.setItem('dark-mode', isDark.toString())
+  const link = document.getElementById('hljs-theme')
+  if (link) {
+    link.href = `https://unpkg.com/highlight.js/styles/github${isDark ? '-dark' : ''}.css`
+  }
 }
 
 const toggleSidebar = () => {
