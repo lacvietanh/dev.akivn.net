@@ -1,17 +1,23 @@
 <script setup>
-import { defineEmits } from 'vue'
+import { defineEmits, onMounted } from 'vue'
+import lightThemeUrl from 'highlight.js/styles/github.css?url'
+import darkThemeUrl from 'highlight.js/styles/github-dark.css?url'
 
 const emit = defineEmits(['toggle-sidebar'])
 
-// Toggle dark mode and update highlight.js theme link
 const toggleDarkMode = () => {
   const isDark = document.documentElement.classList.toggle('dark')
   localStorage.setItem('dark-mode', isDark.toString())
   const link = document.getElementById('hljs-theme')
-  if (link) {
-    link.href = `https://unpkg.com/highlight.js/styles/github${isDark ? '-dark' : ''}.css`
-  }
+  if (link) link.href = isDark ? darkThemeUrl : lightThemeUrl
 }
+
+// Apply highlight.js theme based on stored dark-mode on mount
+onMounted(() => {
+  const isDark = localStorage.getItem('dark-mode') === 'true'
+  const link = document.getElementById('hljs-theme')
+  if (link) link.href = isDark ? darkThemeUrl : lightThemeUrl
+})
 
 const toggleSidebar = () => {
   emit('toggle-sidebar')

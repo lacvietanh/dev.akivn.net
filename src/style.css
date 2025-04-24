@@ -66,27 +66,17 @@
   color: #166534;
 }
 
-.status-core {
+.status-building {
   background-color: #dbeafe;
   color: #1e40af;
 }
 
-.status-legacy {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.status-progress {
+.status-idea {
   background-color: #f3e8ff;
   color: #7e22ce;
 }
 
-.status-partner {
-  background-color: #ffedd5;
-  color: #9a3412;
-}
-
-.status-paused {
+.status-hold {
   background-color: #f3f4f6;
   color: #1f2937;
 }
@@ -97,4 +87,16 @@
   color: #6b7280;
   display: inline-block;
   margin-top: 0.25rem;
+}
+
+/* Override highlight.js code blocks for light/dark modes */
+@layer base {
+  pre.hljs, code.hljs {
+    background-color: #f7eede;
+    color: black;
+  }
+  .dark pre.hljs, .dark code.hljs {
+    background-color: #1f2937;
+    color: #f3f4f6;
+  }
 }

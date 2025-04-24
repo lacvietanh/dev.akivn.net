@@ -72,7 +72,7 @@ const filteredCategories = computed(() => {
 </script>
 
 <template>
-  <aside class="h-full md:py-6 md:pr-4 mb-8 md:mb-0 bg-white dark:bg-gray-900 overflow-y-auto border-r border-gray-200 dark:border-gray-700 pl-1">
+  <aside class="h-full flex flex-col md:py-6 md:pr-4 md:mb-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 pl-1">
     <!-- Mobile header -->
     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 md:hidden">
       <h2 class="font-bold text-lg text-gray-900 dark:text-white">Menu</h2>
@@ -81,7 +81,8 @@ const filteredCategories = computed(() => {
       </button>
     </div>
 
-    <div class="p-4 md:p-0 md:sticky md:top-4 overflow-y-auto h-full">
+    <!-- Fixed part: search box and main menu -->
+    <div class="p-4 md:p-0 flex-shrink-0">
       <div class="mb-6 px-4 md:px-0">
         <input v-model="searchQuery" type="search" placeholder="Tìm kiếm tài liệu..."
           class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 text-gray-900 dark:text-white" />
@@ -95,6 +96,12 @@ const filteredCategories = computed(() => {
             </router-link>
           </li>
         </ul>
+      </nav>
+    </div>
+
+    <!-- Scrollable part: routes/categories -->
+    <div class="overflow-y-auto custom-scrollbar flex-grow px-4 md:px-0">
+      <nav>
         <div v-for="(category, index) in filteredCategories" :key="index" class="mb-6">
           <h3 class="font-semibold text-sm uppercase tracking-wider mb-3 text-gray-500 dark:text-gray-400">{{
             category.title }}</h3>
@@ -129,3 +136,53 @@ const filteredCategories = computed(() => {
     </div>
   </aside>
 </template>
+
+<style scoped>
+/* CSS tùy chỉnh thanh cuộn cho sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  /* Làm cho phần track trong suốt */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  /* Màu xám nhạt cho thanh cuộn */
+  border-radius: 20px;
+  /* Bo tròn viền */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.7);
+  /* Đậm hơn khi hover */
+}
+
+/* Chế độ tối */
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.5);
+  /* Màu tối hơn trong dark mode */
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.8);
+}
+
+/* Ẩn thanh cuộn khi không hover vào sidebar (chỉ áp dụng cho desktop) */
+@media (min-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 2px;
+    /* Mỏng hơn khi không hover */
+    opacity: 0;
+    transition: all 0.3s;
+  }
+
+  .custom-scrollbar:hover::-webkit-scrollbar {
+    width: 4px;
+    /* Hiển thị rõ hơn khi hover */
+    opacity: 1;
+  }
+}
+</style>
