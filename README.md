@@ -55,13 +55,13 @@ dev.akivn.net/
 ## Lộ trình nội dung (Đã cập nhật)
 
 ### 1. Lộ trình căn bản (tối thiểu)
-- **HTML & CSS**: Nền tảng web.
-- **JavaScript**: Ngôn ngữ lập trình web.
 - **Công cụ phát triển**: VS Code, Git, Node.js/npm.
+- **HTML & CSS**: Nền tảng web.
 - **Bulma (CSS Library)**: Framework CSS chính.
-- **HTTP & RESTful API**: Giao thức web và thiết kế API.
+- **JavaScript**: Ngôn ngữ lập trình web.
 - **Vue.js (với Vite)**: Framework JavaScript.
 - **Firebase (Frontend)**: Auth, Firestore, Storage.
+- **HTTP & RESTful API**: Giao thức web và thiết kế API.
 
 ### 2. Lộ trình nâng cao
 - **Vue Ecosystem**: Vue Router, Vuex.

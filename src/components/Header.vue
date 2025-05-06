@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import lightThemeUrl from 'highlight.js/styles/github.css?url'
 import darkThemeUrl from 'highlight.js/styles/github-dark.css?url'
 

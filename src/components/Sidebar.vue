@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed } from 'vue'
 
 const emit = defineEmits(['close-sidebar'])
 const searchQuery = ref('')
@@ -13,7 +13,7 @@ const categories = [
   {
     title: 'Lộ trình căn bản',
     items: [
-      { name: 'Công cụ lập trình', path: '/tools/overview' },
+      { name: 'Công cụ cần thiết', path: '/tools/overview' },
       { name: 'HTML & CSS', path: '/basics/html-css' },
       { name: 'Bulma (CSS Library)', path: '/css/bulma' },
       { name: 'JavaScript', path: '/basics/javascript' },
