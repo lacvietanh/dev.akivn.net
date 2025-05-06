@@ -1,6 +1,20 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useHead } from '@unhead/vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const currentPath = ref('')
+
+// Cập nhật currentPath để đảm bảo SSR hoạt động đúng
+onMounted(() => {
+  currentPath.value = window.location.pathname
+})
+
+// Cập nhật khi route thay đổi
+watch(() => route.path, (newPath) => {
+  currentPath.value = newPath
+})
 
 const props = defineProps({
   title: {
@@ -25,35 +39,47 @@ const canonicalUrl = computed(() => {
   if (props.url) {
     return `https://dev.akivn.net${props.url}`
   }
-  return typeof window !== 'undefined' 
-    ? `https://dev.akivn.net${window.location.pathname}` 
-    : 'https://dev.akivn.net/'
+  
+  // Sử dụng route.path cho SSR và currentPath cho CSR
+  const path = import.meta.env.SSR 
+    ? route.path 
+    : currentPath.value || route.path
+  
+  return `https://dev.akivn.net${path}`
 })
+
+// Đối tượng trạng thái cho metadata
+const metaData = computed(() => ({
+  title: props.title,
+  description: props.description,
+  keywords: props.keywords,
+  url: canonicalUrl.value,
+}))
 
 // Use useHead to manage all meta tags
 useHead({
-  title: computed(() => props.title),
+  title: computed(() => metaData.value.title),
   meta: [
-    { name: 'description', content: computed(() => props.description) },
-    { name: 'keywords', content: computed(() => props.keywords) },
+    { name: 'description', content: computed(() => metaData.value.description) },
+    { name: 'keywords', content: computed(() => metaData.value.keywords) },
     // Open Graph / Facebook
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: canonicalUrl },
-    { property: 'og:title', content: computed(() => props.title) },
-    { property: 'og:description', content: computed(() => props.description) },
+    { property: 'og:url', content: computed(() => metaData.value.url) },
+    { property: 'og:title', content: computed(() => metaData.value.title) },
+    { property: 'og:description', content: computed(() => metaData.value.description) },
     { property: 'og:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
     // Twitter
     { property: 'twitter:card', content: 'summary_large_image' },
-    { property: 'twitter:url', content: canonicalUrl },
-    { property: 'twitter:title', content: computed(() => props.title) },
-    { property: 'twitter:description', content: computed(() => props.description) },
+    { property: 'twitter:url', content: computed(() => metaData.value.url) },
+    { property: 'twitter:title', content: computed(() => metaData.value.title) },
+    { property: 'twitter:description', content: computed(() => metaData.value.description) },
     { property: 'twitter:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
     // Other
     { name: 'author', content: 'Akinet' },
     { name: 'robots', content: 'index, follow' },
   ],
   link: [
-    { rel: 'canonical', href: canonicalUrl }
+    { rel: 'canonical', href: computed(() => metaData.value.url) }
   ]
 })
 </script>

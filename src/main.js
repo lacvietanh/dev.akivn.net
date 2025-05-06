@@ -8,11 +8,9 @@ import './style.css'
 export const createApp = ViteSSG(
   App,
   { routes },
-  async ({ app, router }) => {
+  async ({ app, router, isClient, initialState }) => {
     const head = createHead()
-    if (!(app._context && app._context.provides && app._context.provides.usehead)) {
-      app.use(head)
-    }
+    app.use(head)
 
     // Here you can register global components, directives, install plugins, etc.
 
@@ -21,5 +19,15 @@ export const createApp = ViteSSG(
       // Add any global route guards here
       next()
     })
+  },
+  {
+    // Cấu hình SSG
+    rootContainer: '#app',
+    transformState(state) {
+      return state
+    },
+    onBeforePageRender() {},
+    onAfterPageRender() {},
+    criticalCss: true, // Đảm bảo CSS quan trọng được inline
   }
 )

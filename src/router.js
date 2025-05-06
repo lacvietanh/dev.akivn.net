@@ -8,24 +8,44 @@ const modules = import.meta.glob('./content/**/*.md')
 const generateRoutesFromModules = () => {
   const contentRoutes = []
   for (const path in modules) {
-    const match = path.match(/\.\/content\/(.*)\/(.*)\.md$/)
-    if (match) {
-      const category = match[1]
-      const topic = match[2]
+    // Xử lý cả file trong thư mục con và file trực tiếp
+    // ./content/category/topic.md  -> /category/topic
+    // ./content/category/topic/subtopic.md -> /category/topic/subtopic
+    const pathParts = path.replace('./content/', '').replace('.md', '').split('/')
+    
+    let routePath, routeName, category, topic
+    
+    if (pathParts.length === 2) {
+      // Đường dẫn cơ bản: /category/topic
+      category = pathParts[0]
+      topic = pathParts[1]
+      
       // Special case for combined html-css
-      const routePath = topic === 'html-css' ? `/basics/html-css` : `/${category}/${topic}`
-      const routeName = `${category}-${topic}` // Ensure unique names
-
-      contentRoutes.push({
-        path: routePath,
-        name: routeName,
-        component: () => import('./views/TopicPage.vue'),
-        meta: {
-          // You might want to dynamically load meta from markdown frontmatter later
-          description: `Tài liệu về ${topic} trong ${category}`
-        }
-      })
+      routePath = topic === 'html-css' ? `/basics/html-css` : `/${category}/${topic}`
+      routeName = `${category}-${topic}`
+    } else if (pathParts.length === 3) {
+      // Đường dẫn submenu: /category/topic/subtopic
+      category = pathParts[0]
+      topic = pathParts[1]
+      const subtopic = pathParts[2]
+      
+      routePath = `/${category}/${topic}/${subtopic}`
+      routeName = `${category}-${topic}-${subtopic}`
+    } else {
+      // Bỏ qua các file không khớp mẫu
+      continue
     }
+
+    contentRoutes.push({
+      path: routePath,
+      name: routeName,
+      component: () => import('./views/TopicPage.vue'),
+      meta: {
+        description: pathParts.length === 3
+          ? `Tài liệu về ${pathParts[2]} trong ${pathParts[1]} của ${pathParts[0]}`
+          : `Tài liệu về ${topic} trong ${category}`
+      }
+    })
   }
   return contentRoutes
 }

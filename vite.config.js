@@ -46,5 +46,24 @@ export default defineConfig({
     },
     // Tối ưu kích thước build
     chunkSizeWarningLimit: 1000
+  },
+  ssgOptions: {
+    script: 'async',
+    formatting: 'minify',
+    crittersOptions: {
+      // Đảm bảo CSS quan trọng được inline
+      preload: 'swap',
+      inlineFonts: false,
+    },
+    dirStyle: 'nested', // Tạo cấu trúc thư mục lồng nhau cho URL
+    includedRoutes: (paths) => paths, // Prerender tất cả routes
+    onBeforePageRender: (route, html, ctx) => {
+      // Đây là nơi bạn có thể làm thêm xử lý với mỗi trang HTML trước khi nó được render
+      return html;
+    },
+    onPageRendered: (route, html, ctx) => {
+      // Đây là nơi bạn có thể làm thêm xử lý với mỗi trang HTML sau khi nó được render
+      return html;
+    },
   }
 })

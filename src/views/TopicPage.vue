@@ -26,6 +26,7 @@ const isLoading = ref(true)
 const pageTitle = ref('')
 const pageDescription = ref('')
 const rawContent = ref('')
+const metaReady = ref(false)
 
 // Tạo tiêu đề SEO động dựa trên chủ đề
 const seoTitle = computed(() => {
@@ -73,12 +74,24 @@ const loadTopicContent = async () => {
 
   try {
     // Vite's import.meta.glob with { as: 'raw' } directly imports the raw string content.
-    const modules = import.meta.glob('/src/content/**/*.md', { eager: false, as: 'raw' });
-    const modulePath = `/src/content/${category}/${topic.value}.md`;
+    const modules = import.meta.glob('/src/content/**/*.md', { eager: true, as: 'raw' });
+    
+    // Xây dựng path dựa trên đường dẫn đầy đủ từ route
+    let modulePath;
+    if (pathParts.length > 2) {
+      // Nếu là submenu (path có dạng /category/topic/subtopic)
+      const pathWithoutPrefix = pathParts.join('/');
+      modulePath = `/src/content/${pathWithoutPrefix}.md`;
+    } else {
+      // Đường dẫn thông thường (path có dạng /category/topic)
+      modulePath = `/src/content/${category}/${topic.value}.md`;
+    }
+
+    console.log('Trying to load:', modulePath);
 
     if (modules[modulePath]) {
-      // Call the dynamic import function to get the raw string
-      rawContent.value = await modules[modulePath](); 
+      // Trong SSR mode, chúng ta đã có nội dung sẵn sàng nhờ eager: true
+      rawContent.value = modules[modulePath];
 
       // Tách tiêu đề và mô tả từ nội dung markdown (ví dụ đơn giản)
       const lines = rawContent.value.split('\n');
@@ -96,6 +109,12 @@ const loadTopicContent = async () => {
       content.value = md.render(rawContent.value);
     } else {
       console.warn(`Không tìm thấy module Markdown cho: ${modulePath}`);
+      
+      // Hiển thị thông tin gỡ lỗi
+      console.log('Các module có sẵn:', Object.keys(modules).filter(path => 
+        path.includes(category) && (topic.value ? path.includes(topic.value) : true)
+      ));
+      
       // Fallback nếu không tìm thấy file markdown
       const fallbackTitle = topic.value.charAt(0).toUpperCase() + topic.value.slice(1);
       pageTitle.value = fallbackTitle;
