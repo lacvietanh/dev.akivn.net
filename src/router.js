@@ -8,31 +8,24 @@ const modules = import.meta.glob('./content/**/*.md')
 const generateRoutesFromModules = () => {
   const contentRoutes = []
   for (const path in modules) {
-    // Xử lý cả file trong thư mục con và file trực tiếp
-    // ./content/category/topic.md  -> /category/topic
-    // ./content/category/topic/subtopic.md -> /category/topic/subtopic
     const pathParts = path.replace('./content/', '').replace('.md', '').split('/')
     
-    let routePath, routeName, category, topic
+    let routePath, routeName, category, topic, subtopicName
     
     if (pathParts.length === 2) {
-      // Đường dẫn cơ bản: /category/topic
       category = pathParts[0]
       topic = pathParts[1]
-      
-      // Special case for combined html-css
       routePath = topic === 'html-css' ? `/basics/html-css` : `/${category}/${topic}`
       routeName = `${category}-${topic}`
-    } else if (pathParts.length === 3) {
-      // Đường dẫn submenu: /category/topic/subtopic
+      subtopicName = topic;
+    } else if (pathParts.length >= 3) { // Allow for deeper nesting e.g. /category/topic/subtopic/subsubtopic
       category = pathParts[0]
-      topic = pathParts[1]
-      const subtopic = pathParts[2]
-      
-      routePath = `/${category}/${topic}/${subtopic}`
-      routeName = `${category}-${topic}-${subtopic}`
+      topic = pathParts[1] // The main topic folder
+      // The actual "topic" for title purposes will be the last part
+      subtopicName = pathParts[pathParts.length - 1]; 
+      routePath = `/${pathParts.join('/')}`
+      routeName = pathParts.join('-')
     } else {
-      // Bỏ qua các file không khớp mẫu
       continue
     }
 
@@ -41,9 +34,10 @@ const generateRoutesFromModules = () => {
       name: routeName,
       component: () => import('./views/TopicPage.vue'),
       meta: {
-        description: pathParts.length === 3
-          ? `Tài liệu về ${pathParts[2]} trong ${pathParts[1]} của ${pathParts[0]}`
-          : `Tài liệu về ${topic} trong ${category}`
+        // Title can be a very generic fallback, TopicPage.vue will generate the specific one
+        title: `${subtopicName.charAt(0).toUpperCase() + subtopicName.slice(1)} - ${category.charAt(0).toUpperCase() + category.slice(1)}`,
+        // Description will be fully handled by TopicPage.vue based on content
+        // No need for a generic description here anymore
       }
     })
   }

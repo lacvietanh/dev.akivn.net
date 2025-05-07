@@ -1,87 +1,68 @@
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 
-const route = useRoute()
-const currentPath = ref('')
-
-// Cập nhật currentPath để đảm bảo SSR hoạt động đúng
-onMounted(() => {
-  currentPath.value = window.location.pathname
-})
-
-// Cập nhật khi route thay đổi
-watch(() => route.path, (newPath) => {
-  currentPath.value = newPath
-})
-
+// Define incoming props
 const props = defineProps({
-  title: {
-    type: String,
-    default: 'AkiDEV | DEV.AkiVN.Net | Trang tài liệu lập trình tiếng Việt cho công nghệ web/app hiện đại dùng trong AkiNet'
-  },
-  description: {
-    type: String,
-    default: 'Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ Web/App hiện đại khác mà AkiNet sử dụng. Học lập trình với ví dụ mã nguồn và hướng dẫn chi tiết bằng tiếng Việt.'
-  },
-  keywords: {
-    type: String,
-    default: 'vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind'
-  },
-  url: {
-    type: String,
-    default: null 
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  keywords: { type: String, required: true },
+  url: { type: String, default: null }
+})
+// Get current path for canonical
+const route = useRoute()
+// Compute canonical URL (SSR-friendly)
+const canonicalUrl = computed(() =>
+  props.url
+    ? `https://dev.akivn.net${props.url}`
+    : `https://dev.akivn.net${route.path}`
+)
+
+// Log component props and route info for debugging
+// Logs removed for production
+
+// Create reactive head object that updates when props change
+const head = computed(() => {
+  // Double-check props
+  if (!props.title || props.title === 'AkiNet Devs') {
+    console.warn(`[Head.vue] Warning: title is missing or generic on route ${route.path}`)
+  }
+  
+  return {
+    // Force direct value to ensure reactivity
+    title: `${props.title}`,
+    meta: [
+      { name: 'description', content: props.description },
+      { name: 'keywords', content: props.keywords },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: canonicalUrl.value },
+      { property: 'og:title', content: props.title },
+      { property: 'og:description', content: props.description },
+      { property: 'og:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
+      { property: 'twitter:card', content: 'summary_large_image' },
+      { property: 'twitter:url', content: canonicalUrl.value },
+      { property: 'twitter:title', content: props.title },
+      { property: 'twitter:description', content: props.description },
+      { property: 'twitter:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
+      { name: 'author', content: 'Akinet' },
+      { name: 'robots', content: 'index, follow' }
+    ],
+    link: [{ rel: 'canonical', href: canonicalUrl.value }]
   }
 })
 
-const canonicalUrl = computed(() => {
-  if (props.url) {
-    return `https://dev.akivn.net${props.url}`
+// Use the head object with the useHead hook
+useHead(head)
+
+// Chỉ cập nhật khi các props thay đổi, nhưng không gọi lại useHead
+// Điều này để tránh lỗi "inject() can only be used inside setup()"
+watch(() => [props.title, props.description, props.keywords, props.url], 
+  () => {
+    // Head object sẽ tự động được cập nhật nhờ tính reactive
+    console.log('Head props changed, head object updated')
   }
-  
-  // Sử dụng route.path cho SSR và currentPath cho CSR
-  const path = import.meta.env.SSR 
-    ? route.path 
-    : currentPath.value || route.path
-  
-  return `https://dev.akivn.net${path}`
-})
-
-// Đối tượng trạng thái cho metadata
-const metaData = computed(() => ({
-  title: props.title,
-  description: props.description,
-  keywords: props.keywords,
-  url: canonicalUrl.value,
-}))
-
-// Use useHead to manage all meta tags
-useHead({
-  title: computed(() => metaData.value.title),
-  meta: [
-    { name: 'description', content: computed(() => metaData.value.description) },
-    { name: 'keywords', content: computed(() => metaData.value.keywords) },
-    // Open Graph / Facebook
-    { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: computed(() => metaData.value.url) },
-    { property: 'og:title', content: computed(() => metaData.value.title) },
-    { property: 'og:description', content: computed(() => metaData.value.description) },
-    { property: 'og:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
-    // Twitter
-    { property: 'twitter:card', content: 'summary_large_image' },
-    { property: 'twitter:url', content: computed(() => metaData.value.url) },
-    { property: 'twitter:title', content: computed(() => metaData.value.title) },
-    { property: 'twitter:description', content: computed(() => metaData.value.description) },
-    { property: 'twitter:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
-    // Other
-    { name: 'author', content: 'Akinet' },
-    { name: 'robots', content: 'index, follow' },
-  ],
-  link: [
-    { rel: 'canonical', href: computed(() => metaData.value.url) }
-  ]
-})
+)
 </script>
 
 <template>

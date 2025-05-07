@@ -1,5 +1,8 @@
 <script setup>
 import Head from '../components/Head.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const projects = [
   { title: 'AkiNet', status: 'active', url: 'akivn.net', link: 'https://akivn.net', desc: 'Trang tổng để quản lý tài khoản chung của mọi dự án khác, mạng xã hội kèm các công cụ tiện ích dành cho mọi đối tượng sản xuất media <dự kiến>.', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'firebase'] },
@@ -24,7 +27,8 @@ const projects = [
 
   <Head title="AkiDEV | DEV.AkiVN.Net | Trang tài liệu lập trình tiếng Việt cho công nghệ web/app hiện đại dùng trong AkiNet"
     description="Tài liệu và hướng dẫn tiếng Việt về Vue, Vite, Firebase, Bulma, Tailwind, và các công nghệ Web/App hiện đại khác mà AkiNet sử dụng."
-    keywords="vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind" />
+    keywords="vue, vite, javascript, học lập trình, tài liệu tiếng việt, firebase, nodejs, bulma, tailwind"
+    :url="route.path" />
   <div class="space-y-12 md:space-y-16">
     <!-- Hero Section -->
     <section

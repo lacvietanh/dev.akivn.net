@@ -1,55 +1,27 @@
 <!doctype html>
-<html lang="vi">
-
+<html lang="vi" data-vue-meta-server-rendered>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Head tags will be injected here by ViteSSG -->
+  <!-- Fallback favicon -->
   <link rel="icon" type="image/svg+xml" href="/logo-akidev.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description"
-    content="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet. Lộ trình lập trình web/app cơ bản đến nâng cao cho học viên và nhân viên." />
-  <meta name="keywords"
-    content="AkiDEV, AkiNet, tài liệu lập trình tiếng Việt, lộ trình lập trình web, lộ trình lập trình app, học lập trình web, học lập trình app, kiến thức cơ bản, kiến thức nâng cao, học viên, nhân viên" />
-  <meta name="author" content="Akinet" />
-  <meta name="robots" content="index, follow" />
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://dev.akivn.net/" />
-  <meta property="og:title" content="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet" />
-  <meta property="og:description"
-    content="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet. Lộ trình lập trình web/app cơ bản đến nâng cao cho học viên và nhân viên." />
-  <meta property="og:image" content="/logo-akidev.png" />
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://dev.akivn.net/" />
-  <meta property="twitter:title" content="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet" />
-  <meta property="twitter:description"
-    content="AkiDEV | Trang tài liệu Tiếng Việt hỗ trợ lập trình hệ sinh thái AkiNet. Lộ trình lập trình web/app cơ bản đến nâng cao cho học viên và nhân viên." />
-  <meta property="twitter:image" content="/logo-akidev.png" />
-
-  <link rel="canonical" href="https://dev.akivn.net/" />
-
-  <title>AkiDEV | DEV.AkiVN.Net | Trang tài liệu lập trình tiếng Việt cho công nghệ web/app hiện đại dùng trong AkiNet</title>
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- Highlight.js theme link for dynamic theme switching -->
-  <link id="hljs-theme" rel="stylesheet"  />
-
+  <!-- Highlight.js theme -->
+  <link id="hljs-theme" rel="stylesheet" />
+  <!-- Dark mode restore -->
   <script>
-    // Khôi phục chế độ tối từ localStorage
     if (localStorage.getItem('dark-mode') === 'true' ||
       (!localStorage.getItem('dark-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     }
   </script>
 </head>
-
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
-
 </html>

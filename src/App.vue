@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, Suspense } from 'vue'
 import { RouterView } from 'vue-router'
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
@@ -37,7 +37,17 @@ const toggleSidebar = () => {
       <div class="flex-grow flex flex-col">
         <main class="flex-grow px-4 py-6 min-h-screen">
           <div class="container mx-auto">
-            <RouterView />
+            <Suspense>
+              <template #default>
+                <RouterView />
+              </template>
+              <template #fallback>
+                <div class="flex justify-center items-center min-h-[calc(100vh-200px)]">
+                  <p class="text-xl text-gray-500 dark:text-gray-400">Đang tải trang...</p>
+                  {/* Optional: Add a spinner animation */}
+                </div>
+              </template>
+            </Suspense>
           </div>
         </main>
       </div>

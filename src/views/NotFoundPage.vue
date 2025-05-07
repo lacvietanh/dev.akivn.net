@@ -3,9 +3,10 @@ import Head from '../components/Head.vue';
 </script>
 
 <template>
-  <Head
+<Head
     title="404 - Không tìm thấy trang | Dev.akivn.net"
     description="Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển."
+    keywords="404, không tìm thấy, AkiNet Devs"
     :url="'/404'"
   />
   <div class="flex flex-col items-center justify-center py-12">

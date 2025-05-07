@@ -1,190 +1,277 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import Head from '../components/Head.vue'
+import { useHead } from '@unhead/vue' // Sử dụng trực tiếp useHead
 import MarkdownIt from 'markdown-it'
-import hljs from 'highlight.js'
+import lazyHljs from '../utils/lazyHighlight.js'
 
+// Markdown-it instance
 const md = new MarkdownIt({
   html: true,
   linkify: true,
   typographer: true,
   highlight: (str, lang) => {
-    if (lang && hljs.getLanguage(lang)) {
+    // Giả sử lazyHljs.getHljs() trả về instance hljs đã được cấu hình
+    // và lazyHljs.loadLanguage() đã được gọi nếu cần trước khi render
+    const hljs = lazyHljs.getHljs(); 
+    if (lang && hljs && hljs.getLanguage(lang)) {
       try {
-        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
-      } catch (__) {}
+        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
+      } catch (__) {
+        // Bỏ qua lỗi highlight, trả về code không được highlight
+      }
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`; // Fallback
   }
-})
+});
 
-const route = useRoute()
-const topic = ref('')
-const content = ref('')
-const isLoading = ref(true)
-const pageTitle = ref('')
-const pageDescription = ref('')
-const rawContent = ref('')
-const metaReady = ref(false)
+const route = useRoute();
+const topic = ref('');
+const category = ref('');
+const content = ref(''); // HTML content from markdown
+const isLoading = ref(true);
+const pageTitle = ref(''); // Derived from content or route for meta
+const pageDescription = ref(''); // Derived from content for meta
+const rawContent = ref(''); // Raw markdown string
 
-// Tạo tiêu đề SEO động dựa trên chủ đề
+// Function to parse simple frontmatter
+const parseFrontmatter = (markdown) => {
+  const frontmatter = {};
+  const lines = markdown.split('\\n');
+  if (lines[0] === '---') {
+    let i = 1;
+    while (i < lines.length && lines[i] !== '---') {
+      const line = lines[i];
+      const separatorIndex = line.indexOf(':');
+      if (separatorIndex !== -1) {
+        const key = line.substring(0, separatorIndex).trim();
+        const value = line.substring(separatorIndex + 1).trim();
+        frontmatter[key] = value;
+      }
+      i++;
+    }
+    // Remove frontmatter from content
+    const contentStartIndex = lines.slice(0, i + 1).join('\\n').length + 1;
+    return { frontmatter, content: markdown.substring(contentStartIndex) };
+  }
+  return { frontmatter, content: markdown }; // No frontmatter found
+};
+
+// SEO Computed Properties
 const seoTitle = computed(() => {
-  if (!pageTitle.value) {
-    return `${topic.value.charAt(0).toUpperCase() + topic.value.slice(1)} - Dev.akivn.net`
+  if (pageTitle.value) return pageTitle.value;
+  if (topic.value && category.value) {
+    const capTopic = topic.value.charAt(0).toUpperCase() + topic.value.slice(1);
+    const capCategory = category.value.charAt(0).toUpperCase() + category.value.slice(1);
+    return `${capTopic} - ${capCategory} | AkiNet Devs`;
   }
-  return `${pageTitle.value} - Dev.akivn.net`
-})
+  return 'AkiNet Devs';
+});
 
-// Tạo mô tả SEO động dựa trên nội dung
 const seoDescription = computed(() => {
-  if (pageDescription.value) {
-    return pageDescription.value
+  if (pageDescription.value) return pageDescription.value;
+  if (topic.value && category.value) {
+    return `Tìm hiểu về ${topic.value} trong ${category.value}. Tài liệu lập trình chi tiết tại AkiNet Devs.`;
   }
-  const category = route.path.split('/')[1]
-  return `Tài liệu và hướng dẫn về ${topic.value} trong danh mục ${category}. Học ${topic.value} với ví dụ mã nguồn và hướng dẫn chi tiết bằng tiếng Việt.`
-})
+  return 'Khám phá tài liệu lập trình, hướng dẫn chi tiết và các chủ đề công nghệ tại AkiNet Devs.';
+});
 
-// Tạo từ khóa SEO động
 const seoKeywords = computed(() => {
-  const category = route.path.split('/')[1]
-  return `${topic.value}, ${category}, học lập trình, tài liệu tiếng việt, akinet, dev.akivn.net`
-})
+  const baseKeywords = 'akinet, akidev, akinet devs, học lập trình, tài liệu lập trình, hướng dẫn lập trình, tiếng việt, web development, software engineering';
+  let dynamicKeywords = topic.value && category.value ? `${topic.value}, ${category.value}` : '';
+  return dynamicKeywords ? `${dynamicKeywords}, ${baseKeywords}` : baseKeywords;
+});
 
-// Hàm tải nội dung chủ đề từ file markdown
-const loadTopicContent = async () => {
-  isLoading.value = true
-  content.value = '' // Reset content
-  pageTitle.value = '' // Reset title
-  pageDescription.value = '' // Reset description
-  rawContent.value = '' // Reset raw content
+// Manage document head using useHead
+useHead(computed(() => ({
+  title: seoTitle.value,
+  meta: [
+    { name: 'description', content: seoDescription.value },
+    { name: 'keywords', content: seoKeywords.value },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: `https://dev.akivn.net${route.path}` },
+    { property: 'og:title', content: seoTitle.value },
+    { property: 'og:description', content: seoDescription.value },
+    { property: 'og:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
+    { property: 'twitter:card', content: 'summary_large_image' },
+    { property: 'twitter:url', content: `https://dev.akivn.net${route.path}` },
+    { property: 'twitter:title', content: seoTitle.value },
+    { property: 'twitter:description', content: seoDescription.value },
+    { property: 'twitter:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
+    { name: 'author', content: 'Akinet' },
+    { name: 'robots', content: 'index, follow' }
+  ],
+  link: [
+    { rel: 'canonical', href: `https://dev.akivn.net${route.path}` }
+  ]
+})));
 
-  // Lấy thông tin từ route path
-  const pathParts = route.path.split('/').filter(p => p); // Tách và loại bỏ phần tử rỗng
-  const category = pathParts.length > 0 ? pathParts[0] : ''; // 'basics', 'tools', 'vue', etc.
-  topic.value = pathParts.length > 1 ? pathParts[pathParts.length - 1] : ''; // Lấy phần cuối cùng làm topic
+const initializeData = async () => {
+  isLoading.value = true;
+  const currentPath = route.path;
+  // Normalize path: /basics/html-css -> basics/html-css
+  const targetPathSuffix = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
+  // Construct module key: /src/content/basics/html-css.md
+  const moduleKey = `/src/content/${targetPathSuffix}.md`;
 
-  // Kiểm tra nếu category hoặc topic rỗng (có thể xảy ra ở trang chủ hoặc lỗi)
-  if (!category || !topic.value) {
-    console.error('Không thể xác định category hoặc topic từ path:', route.path);
-    content.value = `<p>Lỗi: Không thể xác định chủ đề từ đường dẫn.</p>`;
-    isLoading.value = false;
-    return;
+  const pathParts = targetPathSuffix.split('/').filter(p => p);
+  if (pathParts.length > 0) {
+    category.value = pathParts[0];
+    topic.value = pathParts[pathParts.length - 1];
+  } else {
+    category.value = '';
+    topic.value = '';
   }
+
+  // Reset previous page-specific meta
+  pageTitle.value = '';
+  pageDescription.value = '';
 
   try {
-    // Vite's import.meta.glob with { as: 'raw' } directly imports the raw string content.
-    const modules = import.meta.glob('/src/content/**/*.md', { eager: true, as: 'raw' });
-    
-    // Xây dựng path dựa trên đường dẫn đầy đủ từ route
-    let modulePath;
-    if (pathParts.length > 2) {
-      // Nếu là submenu (path có dạng /category/topic/subtopic)
-      const pathWithoutPrefix = pathParts.join('/');
-      modulePath = `/src/content/${pathWithoutPrefix}.md`;
-    } else {
-      // Đường dẫn thông thường (path có dạng /category/topic)
-      modulePath = `/src/content/${category}/${topic.value}.md`;
-    }
-
-    console.log('Trying to load:', modulePath);
-
-    if (modules[modulePath]) {
-      // Trong SSR mode, chúng ta đã có nội dung sẵn sàng nhờ eager: true
-      rawContent.value = modules[modulePath];
-
-      // Tách tiêu đề và mô tả từ nội dung markdown (ví dụ đơn giản)
-      const lines = rawContent.value.split('\n');
-      if (lines.length > 0 && lines[0].startsWith('# ')) {
-        pageTitle.value = lines[0].substring(2).trim();
-      }
-
-      for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim() && !lines[i].startsWith('#') && !lines[i].startsWith('```')) {
-          pageDescription.value = lines[i].trim();
-          break;
-        }
-      }
-
-      content.value = md.render(rawContent.value);
-    } else {
-      console.warn(`Không tìm thấy module Markdown cho: ${modulePath}`);
+    const mdModules = import.meta.glob('/src/content/**/*.md', { as: 'raw' });
+    if (mdModules[moduleKey]) {
+      const fullRawContent = await mdModules[moduleKey](); // Call the async function to get raw string
       
-      // Hiển thị thông tin gỡ lỗi
-      console.log('Các module có sẵn:', Object.keys(modules).filter(path => 
-        path.includes(category) && (topic.value ? path.includes(topic.value) : true)
-      ));
+      const { frontmatter, content: markdownContent } = parseFrontmatter(fullRawContent);
       
-      // Fallback nếu không tìm thấy file markdown
-      const fallbackTitle = topic.value.charAt(0).toUpperCase() + topic.value.slice(1);
-      pageTitle.value = fallbackTitle;
-      content.value = `
-        <h1>${fallbackTitle}</h1>
-        <p>Nội dung về chủ đề ${topic.value} đang được chuẩn bị.</p>
-        <p>Vui lòng quay lại sau.</p>
-      `;
-    }
+      rawContent.value = markdownContent; // Store content without frontmatter
+      content.value = md.render(markdownContent);
 
+      if (frontmatter.title) {
+        pageTitle.value = frontmatter.title;
+      }
+      if (frontmatter.description) {
+        pageDescription.value = frontmatter.description;
+      }
+      // The TODO for parsing frontmatter is now addressed.
+    } else {
+      console.warn(`Markdown content not found for key: ${moduleKey} (derived from path: ${currentPath})`);
+      content.value = `<article class="prose dark:prose-invert max-w-none"><h1>Nội dung không tìm thấy</h1><p>Không tìm thấy nội dung cho đường dẫn: ${currentPath}.</p></article>`;
+      rawContent.value = '';
+    }
   } catch (error) {
-    console.error('Không thể tải hoặc xử lý nội dung markdown:', error);
-    const fallbackTitle = topic.value ? topic.value.charAt(0).toUpperCase() + topic.value.slice(1) : 'Lỗi';
-    pageTitle.value = fallbackTitle;
-    content.value = `
-      <h1>${fallbackTitle}</h1>
-      <p>Đã xảy ra lỗi khi tải nội dung. Vui lòng thử lại sau.</p>
-    `;
+    console.error(`Error loading markdown content for ${currentPath} (key: ${moduleKey}):`, error);
+    content.value = `<article class="prose dark:prose-invert max-w-none"><h1>Lỗi tải nội dung</h1><p>Đã xảy ra lỗi khi tải nội dung. Vui lòng thử lại sau.</p><p>${error.message}</p></article>`;
+    rawContent.value = '';
   } finally {
     isLoading.value = false;
   }
 };
 
-// Gọi loadTopicContent khi component được mounted
-onMounted(loadTopicContent);
+// Function to be called on client-side navigation
+const loadTopicContent = async () => {
+  await initializeData();
+};
 
-// Và gọi lại khi route thay đổi (ví dụ: chuyển giữa các topic)
-watch(() => route.path, loadTopicContent);
+// Initial data load - awaited in setup
+await initializeData();
+
+// Watch for route changes for client-side navigation
+onMounted(() => {
+  watch(() => route.path, (newPath, oldPath) => {
+    if (newPath !== oldPath && oldPath !== undefined) { // Ensure actual path change
+      loadTopicContent();
+    }
+  });
+});
 </script>
 
 <template>
-
-  <Head :title="seoTitle" :description="seoDescription" :keywords="seoKeywords" />
-  <div class="prose dark:prose-invert max-w-none text-gray-900 dark:text-gray-100">
-    <div v-if="isLoading" class="py-8 flex justify-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-
-    <div v-else v-html="content" class="topic-content"></div>
+  <!-- Head component is managed by useHead, no need to render a <Head /> component here -->
+  <div v-if="isLoading" class="flex justify-center items-center min-h-[calc(100vh-200px)]">
+    <p class="text-xl text-gray-500 dark:text-gray-400">Đang tải nội dung...</p>
+    <!-- Optional: Add a spinner animation -->
+  </div>
+  <div v-else v-html="content" class="topic-content prose dark:prose-invert max-w-none text-gray-900 dark:text-gray-100">
   </div>
 </template>
 
 <style>
 /* Sử dụng CSS thông thường thay vì @apply */
 .topic-content h1 {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem; /* 24px */
+  padding-bottom: 0.5rem; /* 8px */
+  border-bottom: 1px solid #e5e7eb; /* Cool Gray 200 */
 }
 
+.dark .topic-content h1 {
+  border-bottom-color: #4b5563; /* Cool Gray 600 */
+}
+
+
 .topic-content h2 {
-  font-size: 1.5rem;
-  line-height: 2rem;
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
   font-weight: 600;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: 2rem; /* 32px */
+  margin-bottom: 1rem; /* 16px */
+  padding-bottom: 0.25rem; /* 4px */
+  border-bottom: 1px solid #e5e7eb; /* Cool Gray 200 */
+}
+
+.dark .topic-content h2 {
+  border-bottom-color: #4b5563; /* Cool Gray 600 */
 }
 
 .topic-content p {
-  margin-bottom: 1rem;
+  margin-bottom: 1rem; /* 16px */
+  line-height: 1.75; /* More readable line height */
 }
 
-.topic-content ul {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-  margin-bottom: 1.5rem;
+.topic-content ul, .topic-content ol {
+  list-style-position: outside;
+  padding-left: 1.5rem; /* 24px */
+  margin-bottom: 1.5rem; /* 24px */
 }
 
 .topic-content li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.topic-content pre.hljs {
+  border-radius: 0.375rem; /* 6px */
+  padding: 1rem; /* 16px */
+  margin-bottom: 1.5rem; /* 24px */
+  overflow-x: auto;
+}
+
+.topic-content code {
+  font-family: 'Courier New', Courier, monospace; /* Consistent monospace font */
+}
+
+.topic-content pre.hljs code {
+  white-space: pre;
+}
+
+.topic-content a {
+  color: #3b82f6; /* Blue 500 */
+  text-decoration: none;
+}
+.topic-content a:hover {
+  text-decoration: underline;
+}
+
+.dark .topic-content a {
+  color: #60a5fa; /* Blue 400 */
+}
+
+/* Add some padding to the content area itself */
+.topic-content {
+  padding: 1rem; /* Default padding */
+}
+
+@media (min-width: 640px) { /* sm */
+  .topic-content {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) { /* md */
+  .topic-content {
+    padding: 2rem;
+  }
 }
 </style>
