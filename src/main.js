@@ -7,7 +7,12 @@ import './style.css'
 // https://github.com/antfu/vite-ssg
 export const createApp = ViteSSG(
   App,
-  { routes },
+  { 
+    routes,
+    // Thêm cấu hình router để hỗ trợ trailing slash từ Cloudflare Pages
+    strict: false, // Không kiểm tra đường dẫn một cách nghiêm ngặt
+    trailingSlash: true, // Cho phép các URL có dấu slash ở cuối
+  },
   // Setup application and attach unhead instance to SSG context
   async (ctx) => {
     // Create unhead instance and register to app

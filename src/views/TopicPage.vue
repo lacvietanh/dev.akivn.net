@@ -82,6 +82,16 @@ const seoKeywords = computed(() => {
   return dynamicKeywords ? `${dynamicKeywords}, ${baseKeywords}` : baseKeywords;
 });
 
+// Tạo URL chuẩn có dấu / ở cuối cho canonical
+const canonicalUrl = computed(() => {
+  let path = route.path;
+  // Đảm bảo path luôn có dấu / ở cuối (trừ trang chủ đã có sẵn /)
+  if (!path.endsWith('/') && path !== '/') {
+    path = `${path}/`;
+  }
+  return `https://dev.akivn.net${path}`;
+});
+
 // Manage document head using useHead
 useHead(computed(() => ({
   title: seoTitle.value,
@@ -89,12 +99,12 @@ useHead(computed(() => ({
     { name: 'description', content: seoDescription.value },
     { name: 'keywords', content: seoKeywords.value },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: `https://dev.akivn.net${route.path}` },
+    { property: 'og:url', content: canonicalUrl.value },
     { property: 'og:title', content: seoTitle.value },
     { property: 'og:description', content: seoDescription.value },
     { property: 'og:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
     { property: 'twitter:card', content: 'summary_large_image' },
-    { property: 'twitter:url', content: `https://dev.akivn.net${route.path}` },
+    { property: 'twitter:url', content: canonicalUrl.value },
     { property: 'twitter:title', content: seoTitle.value },
     { property: 'twitter:description', content: seoDescription.value },
     { property: 'twitter:image', content: 'https://dev.akivn.net/img/fbog-akidev-home.png' },
@@ -102,13 +112,19 @@ useHead(computed(() => ({
     { name: 'robots', content: 'index, follow' }
   ],
   link: [
-    { rel: 'canonical', href: `https://dev.akivn.net${route.path}` }
+    { rel: 'canonical', href: canonicalUrl.value }
   ]
 })));
 
 const initializeData = async () => {
   isLoading.value = true;
-  const currentPath = route.path;
+  let currentPath = route.path;
+  
+  // Xóa dấu / ở cuối path nếu có để đảm bảo nhất quán khi tìm file markdown
+  if (currentPath.endsWith('/') && currentPath !== '/') {
+    currentPath = currentPath.slice(0, -1);
+  }
+  
   // Normalize path: /basics/html-css -> basics/html-css
   const targetPathSuffix = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
   // Construct module key: /src/content/basics/html-css.md

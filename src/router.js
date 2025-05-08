@@ -29,10 +29,20 @@ const generateRoutesFromModules = () => {
       continue
     }
 
+    // Tạo route với alias để hỗ trợ cả hai dạng đường dẫn (có hoặc không có dấu / ở cuối)
+    // Điều này giúp đảm bảo cả /path và /path/ đều sẽ hoạt động
+    const routePathWithoutTrailingSlash = routePath.endsWith('/') 
+        ? routePath.slice(0, -1) 
+        : routePath;
+    const routePathWithTrailingSlash = routePath.endsWith('/') 
+        ? routePath 
+        : `${routePath}/`;
+
     contentRoutes.push({
-      path: routePath,
+      path: routePathWithoutTrailingSlash,
       name: routeName,
       component: () => import('./views/TopicPage.vue'),
+      alias: routePathWithTrailingSlash, // Thêm alias để hỗ trợ cả path có dấu / ở cuối
       meta: {
         // Title can be a very generic fallback, TopicPage.vue will generate the specific one
         title: `${subtopicName.charAt(0).toUpperCase() + subtopicName.slice(1)} - ${category.charAt(0).toUpperCase() + category.slice(1)}`,
