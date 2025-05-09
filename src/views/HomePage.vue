@@ -1,26 +1,19 @@
 <script setup>
 import Head from '../components/Head.vue';
 import { useRoute } from 'vue-router';
+import { ref, onMounted } from 'vue';
 
 const route = useRoute();
+const projects = ref([]);
 
-const projects = [
-  { title: 'AkiNet', status: 'active', url: 'akivn.net', link: 'https://akivn.net', desc: 'Trang tổng để quản lý tài khoản chung của mọi dự án khác, mạng xã hội kèm các công cụ tiện ích dành cho mọi đối tượng sản xuất media <dự kiến>.', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'firebase'] },
-  { title: 'AkiApp', status: 'active', url: 'app.akivn.net', link: 'https://app.akivn.net', desc: 'Trang tổng các app/miniapp/webapp tiện ích sử dụng trực tiếp hoặc giới thiệu, hướng dẫn, tải về cho mọi app trong hệ sinh thái AkiNet.', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'firebase', 'nginx', 'nodejs', 'express', 'websocket', 'cloudflarePages'] },
-  { title: 'AkiCloud', status: 'building', url: 'cloud.akivn.net', link: 'https://cloud.akivn.net', desc: 'Chia sẻ tài nguyên công khai (hoặc cloud riêng tư cho một nhóm làm việc tiện lợi trên AkiNet).', tags: ['html', 'css', 'js', 'bulma', 'vue', 'minio', 'nginx', 'php'] },
-  { title: 'AkiDEV', status: 'active', url: 'dev.akivn.net', link: 'https://dev.akivn.net', desc: 'Trang tài liệu kỹ thuật tiếng việt, lộ trình học công nghệ web hiện đại và những công nghệ dùng trong AkiNet.', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG'] },
-  { title: 'Aki Spleeter', status: 'active', url: 'tool.akivn.net/tachnhac', link: 'https://tool.akivn.net/tachnhac', desc: 'Trang tách nhạc v1, tải nhạc trực tuyến từ link nhạc/video của các nền tảng, sẽ sớm được tích hợp như một lựa chọn trong tách nhạc v2 vì trang này đang dùng những công nghệ cũ khó mở rộng.', tags: ['html', 'css', 'js', 'bulma', 'flask', 'php', 'python', 'sqlite', 'firebase'] },
-  { title: 'TachNhac v2', status: 'idea', url: 'tachnhac.akivn.net', link: 'https://tachnhac.akivn.net', desc: 'Đang triển khai như một trang riêng, sẽ có khả năng nhúng vào trang AkiApp. Sử dụng API của Music.Ai thay vì spleeter, cho khả năng xử lý âm thanh, âm nhạc tuyệt đỉnh nhất so với các công nghệ hiện tại.', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'flask', 'python', 'express', 'firebase'] },
-  { title: 'Oscar Studio', status: 'building', url: 'studio.oscarfamily.vn', link: 'https://studio.oscarfamily.vn', desc: 'Website của OSCAR ENTERTAINMENT - Dịch vụ sản xuất âm nhạc/media toàn diện, - Đối tác quan trọng của AkiNet. Lạc Việt Anh (sáng lập AkiNet) từ một người sản xuất âm nhạc rút lui về học & phát triển công nghệ để phục vụ ngược lại các đối tượng sản xuất âm nhạc, trong đó có Oscar Entertainment (do Lạc Quốc Huy sáng lập và vận hành) là dự án studio tâm huyết mà 2 anh em muốn phát triển lớn mạnh.', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase'] },
-  { title: 'LopNhac', status: 'idea', url: 'lopnhac.akivn.net', link: 'https://lopnhac.akivn.net', desc: 'Nền tảng phục vụ đối tượng dạy và học nhạc dành riêng cho thị trường Việt Nam, dễ dàng quản lý đến từng chi tiết (lịch học, học viên, học phí, tiến trình học của từng học viên) chỉ bằng kéo thả trực quan. Hậu thuẫn bởi sự đầu tư và cố vấn của anh Đặng Phúc Thịnh (Một nhà sản xuất âm nhạc - với khả năng giảng dạy tuyệt vời - đến từ Hội An).', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'cloudflarePages', 'viteSSG', 'firebase'] },
-  { title: 'VST Shop', status: 'building', url: 'vstshop.com', link: 'https://vstshop.com', desc: 'Web/App phục vụ mọi thứ liên quan đến VST (nhạc cụ ảo - Virtual Studio Technology) Tìm kiếm và cài đặt tiện lợi chỉ với 1 click, cài đặt hàng loạt, gỡ bỏ sạch sẽ, quản lý tài nguyên và thư viện tiện lợi, chia sẻ kiến thức về VST/Plugins, sản xuất âm nhạc, Samples, Presets, Project,... App build cho cả nền tảng MacOS và Windows.', tags: ['tauri', 'vue', 'vite', 'html', 'css', 'js', 'tailwind', 'minio', 'nginx', 'express', 'websocket', 'firebase', 'rust', 'bash', 'cmd', 'powershell', 'cloudflarePages'] },
-  { title: 'AkiWorkflow', status: 'active', url: 'akiworkflow.com', link: 'https://akiworkflow.com', desc: 'Hệ sinh thái phần mềm toàn diện cho sản xuất âm nhạc trên máy tính Mac. Hiện có 48 thành viên chính thức, là người Việt đến từ nhiều nơi (Chủ yếu là Hà Nội, Sài Gòn, Hàn, Nhật, Phi).', tags: ['vue', 'html', 'css', 'js', 'bulma', 'php', 'electronJS'] },
-  { title: 'AkiWorkflow v2', status: 'idea', url: 'app.akiworkflow.com', link: 'https://app.akiworkflow.com', desc: 'Phiên bản mới của AkiWorkflow, tích hợp tính năng nâng cao và hiệu năng cao hơn.', tags: ['tauri', 'vue', 'vite', 'html', 'css', 'js', 'tailwind', 'express', 'websocket', 'firebase', 'rust', 'bash'] },
-  { title: 'Aki Chord Ultra', status: 'idea', url: 'akichord.com', link: 'https://akichord.com', desc: 'Web/App hợp âm siêu cấp, sử dụng công nghệ AI để nhận diện hợp âm, chuyển đổi hiển thị hợp âm cơ bản đến nâng cao và transpose thời gian thực, chia sẻ 50% lợi nhuận cho những người tiên phong (những người gửi yêu cầu xử lý đầu tiên của một bài hát mới trên nền tảng)', tags: ['vue', 'vite', 'html', 'css', 'js', 'bulma', 'express', 'minio', 'firebase'] },
-  { title: 'Aki NimoJackpot', status: 'hold', url: '', link: 'https://github.com/lacvietanh/AkiAuto-NimoJackpot', desc: 'Công cụ tự động cho nền tảng Nimo TV.', tags: ['electronJS', 'html', 'css', 'js'] },
-  { title: 'Aki TeleAuto', status: 'hold', url: '', link: 'https://github.com/lacvietanh/AkiTeleAuto', desc: 'App Auto cho Telegram miniApp phục vụ đối tượng "chơi Airdrop", quản lý nhiều tài khoản, tự động hóa nhiệm vụ...', tags: ['electron-vite', 'html', 'css', 'js'] },
-  { title: 'THPT Nghia Minh', status: 'hold', url: '', link: 'https://thptnghiaminh.akivn.net/', desc: 'Website thư viện số cho trường THPT Nghia Minh.', tags: ['html', 'css', 'js', 'php'] }
-];
+onMounted(async () => {
+  try {
+    const response = await fetch('/projects.json');
+    projects.value = await response.json();
+  } catch (error) {
+    console.error('Error loading projects:', error);
+  }
+});
 </script>
 
 <template>
