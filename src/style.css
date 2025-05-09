@@ -19,23 +19,18 @@
   }
 }
 
-/* Component styles - will be included in components layer */
-@layer components {
-  /* Tag component styles */
-  .tag {
-    display: inline-block;
-    font-size: 0.75rem; /* text-xs */
-    font-weight: 500;   /* font-medium */
-    padding: 0.25rem 0.5rem; /* py-1 px-2 */
-    border-radius: 0.25rem; /* rounded */
-  }
-
-  /* Technology tag colors */
-  .tag-vue { background-color: #42b883; color: #ffffff; }
-  .tag-vite { background-color: #646cff; color: #ffffff; }
-  .tag-html { background-color: #e34c26; color: #ffffff; }
-  .tag-css { background-color: #2965f1; color: #ffffff; }
+.tag {
+  display: inline-block;
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;   /* font-medium */
+  padding: 0.25rem 0.5rem; /* py-1 px-2 */
+  border-radius: 0.25rem; /* rounded */
 }
+/* Technology tag colors */
+.tag-vue { background-color: #42b883; color: #ffffff; }
+.tag-vite { background-color: #646cff; color: #ffffff; }
+.tag-html { background-color: #e34c26; color: #ffffff; }
+.tag-css { background-color: #2965f1; color: #ffffff; }
 .tag-js { background-color: #f7df1e; color: #000000; }
 .tag-bulma { background-color: #00d1b2; color: #ffffff; }
 .tag-firebase { background-color: #febf2b; color: #000000; }
