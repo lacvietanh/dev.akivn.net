@@ -35,14 +35,13 @@ export const createApp = ViteSSG(
     return { head };
   },
   {
-    // Cấu hình SSG
+    // SSG options
     rootContainer: '#app',
     transformState(state) {
-      // Ensure state is properly serialized
       return JSON.stringify(state || {})
     },
     onBeforePageRender() {},
-    onAfterPageRender() {},
-    criticalCss: true, // Đảm bảo CSS quan trọng được inline
+    onPageRendered() {},
+    criticalCss: false, // Disable Critters critical CSS inlining
   }
 )

@@ -32,9 +32,14 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    assetsDir: 'assets',
+    // Place non-CSS assets under assets/, but CSS at root
+    assetsDir: '',
     emptyOutDir: true,
     minify: 'esbuild',
+    // Gộp tất cả CSS vào một file duy nhất để đáp ứng yêu cầu plan.md
+    cssCodeSplit: false,
+    // Generate manifest for easier asset reference
+    manifest: true,
     esbuildOptions: {
       drop: ['console', 'debugger'], // Loại bỏ console.log trong production
       legalComments: 'none', // Loại bỏ comments
@@ -42,6 +47,15 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
+        // Cấu hình đặt tên cho các file assets (bao gồm CSS)
+        assetFileNames: (assetInfo) => {
+          // Output Tailwind CSS bundle as akidev.css at dist root
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            return 'akidev.css';
+          }
+          // Other assets go into assets/ folder
+          return 'assets/[name]-[hash][extname]';
+        },
         manualChunks: (id) => {
           // Chia nhỏ các dependencies vào các chunks riêng biệt
           if (id.includes('node_modules')) {
@@ -77,10 +91,10 @@ export default defineConfig({
   ssgOptions: {
     script: 'async',
     formatting: 'minify',
-    crittersOptions: {
-      preload: 'swap',
-      inlineFonts: false,
-    },
+    // Disable critical CSS inlining entirely
+    criticalCss: false,
+    // Turn off Critters plugin to prevent any CSS inlining
+    crittersOptions: false,
     dirStyle: 'nested',
     includedRoutes: (paths) => paths,
     onBeforePageRender: (route, html, ctx) => {
@@ -106,12 +120,22 @@ export default defineConfig({
       
       // Fix the [object Object] in __INITIAL_STATE__
       html = html.replace(
-        /<script>window\.__INITIAL_STATE__\s*=\s*\[object Object\]<\/script>/g, 
+        /<script>window\.__INITIAL_STATE__\s*=\s*\[object Object\]<\/script>/g,
         '<script>window.__INITIAL_STATE__={};</script>'
-      )
+      );
       
       // Replace %bodyTags% placeholder if still exists
       html = html.replace(/%bodyTags%/g, '<!-- Body tags injected by ViteSSG -->');
+
+      // Modify CSS link tag to include name attribute and cache-busting hash
+      const cacheBustQuery = new Date().getTime();
+      html = html.replace(
+        /(<link\s+rel="stylesheet")(\s+href=")(\/akidev\.css)(")(>)/gi,
+        (match, p1, p2, p3, p4, p5) => {
+          // Insert name="akidev" and append cache buster
+          return `${p1} name="akidev"${p2}${p3}?r=${cacheBustQuery}${p4}${p5}`;
+        }
+      );
       
       return html
     }

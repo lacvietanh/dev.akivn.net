@@ -254,10 +254,6 @@ onMounted(() => {
   overflow-x: auto;
 }
 
-.topic-content code {
-  font-family: 'Courier New', Courier, monospace; /* Consistent monospace font */
-}
-
 .topic-content pre.hljs code {
   white-space: pre;
 }
