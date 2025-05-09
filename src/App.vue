@@ -1,11 +1,9 @@
 <script setup>
 import { ref, Suspense } from 'vue'
 import { RouterView } from 'vue-router'
-import { useHead } from '@unhead/vue'
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
 import Footer from './components/Footer.vue'
-import { getPreloadLinks, getManifest } from './utils/css-preload'
 
 const isSidebarOpen = ref(false)
 
@@ -13,10 +11,6 @@ const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
 }
 
-// Add preload for critical CSS files
-useHead({
-  link: getPreloadLinks(getManifest())
-})
 </script>
 
 <template>
