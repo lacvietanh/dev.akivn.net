@@ -82,8 +82,8 @@
   {
     "title": "AkiWorkflow v2",
     "status": "idea",
-    "url": "app.akiworkflow.com",
-    "link": "https://app.akiworkflow.com",
+    "url": "akiworkflow.pages.dev",
+    "link": "https://akiworkflow.pages.dev",
     "desc": "Phiên bản mới của AkiWorkflow, tích hợp tính năng nâng cao và hiệu năng cao hơn.",
     "tags": ["tauri", "vue", "vite", "html", "css", "js", "tailwind", "express", "websocket", "firebase", "rust", "bash"]
   },
@@ -94,6 +94,14 @@
     "link": "https://akichord.com",
     "desc": "Web/App hợp âm siêu cấp, sử dụng công nghệ AI để nhận diện hợp âm, chuyển đổi hiển thị hợp âm cơ bản đến nâng cao và transpose thời gian thực, chia sẻ 50% lợi nhuận cho những người tiên phong (những người gửi yêu cầu xử lý đầu tiên của một bài hát mới trên nền tảng)",
     "tags": ["vue", "vite", "html", "css", "js", "bulma", "express", "minio", "firebase"]
+  },
+  {
+    "title": "LamNhac.net",
+    "status": "idea",
+    "url": "lamnhac.net",
+    "link": "https://lamnhac.pages.dev",
+    "desc": "Nền tảng combo tất cả trong một cho người làm nhạc, từ việc tìm kiếm, tải về, cài đặt, quản lý VST/Plugins, Samples, Presets, Project,... đến việc chia sẻ kiến thức về sản xuất âm nhạc. Dự kiến sẽ có App cho cả MacOS và Windows.",
+    "tags": ["vue", "vite", "html", "css", "js", "tailwind", "cloudflarePages", "viteSSG", "firebase"]
   },
   {
     "title": "Aki NimoJackpot",

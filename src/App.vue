@@ -1,15 +1,15 @@
 <script setup>
-import { ref, Suspense } from 'vue'
-import { RouterView } from 'vue-router'
-import Header from './components/Header.vue'
-import Sidebar from './components/Sidebar.vue'
-import Footer from './components/Footer.vue'
+  import { ref } from 'vue'
+  import { RouterView } from 'vue-router'
+  import Header from './components/Header.vue'
+  import Sidebar from './components/Sidebar.vue'
+  import Footer from './components/Footer.vue'
 
-const isSidebarOpen = ref(false)
+  const isSidebarOpen = ref(false)
 
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
-}
+  const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value
+  }
 
 </script>
 
@@ -45,7 +45,10 @@ const toggleSidebar = () => {
               <template #fallback>
                 <div class="flex justify-center items-center min-h-[calc(100vh-200px)]">
                   <p class="text-xl text-gray-500 dark:text-gray-400">Đang tải trang...</p>
-                  {/* Optional: Add a spinner animation */}
+                  <svg class="animate-spin h-16 w-16 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
                 </div>
               </template>
             </Suspense>
