@@ -1,19 +1,11 @@
 <script setup>
-import Head from '../components/Head.vue';
-import { useRoute } from 'vue-router';
-import { ref, onMounted } from 'vue';
+  import Head from '../components/Head.vue';
+  import { useRoute } from 'vue-router';
+  import { ref, onMounted } from 'vue';
 
-const route = useRoute();
-const projects = ref([]);
+  const route = useRoute();
+  import projects from '@/assets/projects.json'
 
-onMounted(async () => {
-  try {
-    const response = await fetch('/projects.json');
-    projects.value = await response.json();
-  } catch (error) {
-    console.error('Error loading projects:', error);
-  }
-});
 </script>
 
 <template>

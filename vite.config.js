@@ -3,12 +3,40 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import path from 'path'
+import fs from 'fs'
 // SSR head injection will be handled by ViteSSG via returned head instance
+
+// Plugin tùy chỉnh để fetch projects.json trước khi build
+function fetchProjectsPlugin() {
+  return {
+    name: 'fetch-projects',
+    async buildStart() {
+      console.log('[FetchProjects] Fetching projects.json from akivn.net...')
+      try {
+        const response = await fetch('https://akivn.net/json/projects.json')
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+        const data = await response.json()
+        const assetsDir = path.resolve(process.cwd(), 'src/assets')
+        if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true })
+        const filePath = path.resolve(assetsDir, 'projects.json')
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+        console.log('[FetchProjects] ✅ Successfully fetched and saved projects.json')
+      } catch (error) {
+        console.warn('[FetchProjects] ⚠️ Failed to fetch projects.json:', error.message)
+        console.warn('[FetchProjects] Continuing build without updating projects.json...')
+        const existingFilePath = path.resolve(process.cwd(), 'src/assets/projects.json')
+        if (fs.existsSync(existingFilePath)) console.log('[FetchProjects] Using existing projects.json file')
+        else console.warn('[FetchProjects] No existing projects.json found')
+      }
+    }
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   assetsInclude: ['**/*.md'],
   plugins: [
+    fetchProjectsPlugin(), // Plugin fetch projects.json trước khi build
     vue(),
     vueJsx(), // Hỗ trợ JSX trong Vue
     viteStaticCopy({
@@ -71,7 +99,7 @@ export default defineConfig({
             // Các dependencies khác có thể thêm vào đây
             return 'vendor'; // Chunk cho các dependencies còn lại
           }
-          
+
           // Phân chia code theo tính năng
           if (id.includes('/src/components/')) {
             return 'components';
@@ -105,10 +133,10 @@ export default defineConfig({
           console.log(`[ViteSSG] Rendering route: ${route.path}, head tags resolved:`, !!ctx.head)
         }
       }
-      
+
       // Replace any remaining %headTags% placeholders
       html = html.replace(/%headTags%/g, '<!-- Head tags injected by ViteSSG -->');
-      
+
       return html
     },
     onPageRendered: (route, html, ctx) => {
@@ -117,13 +145,13 @@ export default defineConfig({
         const hasTitle = html.includes('<title>') && !html.includes('<title>AkiNet Devs</title>')
         console.log(`[ViteSSG] Page rendered for ${route.path}: Has proper title: ${hasTitle}`)
       }
-      
+
       // Fix the [object Object] in __INITIAL_STATE__
       html = html.replace(
         /<script>window\.__INITIAL_STATE__\s*=\s*\[object Object\]<\/script>/g,
         '<script>window.__INITIAL_STATE__={};</script>'
       );
-      
+
       // Replace %bodyTags% placeholder if still exists
       html = html.replace(/%bodyTags%/g, '<!-- Body tags injected by ViteSSG -->');
 
@@ -136,7 +164,7 @@ export default defineConfig({
           return `${p1} name="akidev"${p2}${p3}?r=${cacheBustQuery}${p4}${p5}`;
         }
       );
-      
+
       return html
     }
   }
