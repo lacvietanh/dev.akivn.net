@@ -146,20 +146,23 @@ const initializeData = async () => {
   try {
     const mdModules = import.meta.glob('/src/content/**/*.md', { as: 'raw' });
     if (mdModules[moduleKey]) {
-      const fullRawContent = await mdModules[moduleKey](); // Call the async function to get raw string
-      
+      let fullRawContent = await mdModules[moduleKey]();
+      // Fix: handle Vite SSG prod returns { default: string } instead of string
+      if (typeof fullRawContent !== 'string' && fullRawContent && typeof fullRawContent.default === 'string') {
+        fullRawContent = fullRawContent.default;
+      }
+      if (typeof fullRawContent !== 'string') {
+        throw new TypeError(`Markdown module did not return a string. Got: ${typeof fullRawContent}`);
+      }
       const { frontmatter, content: markdownContent } = parseFrontmatter(fullRawContent);
-      
-      rawContent.value = markdownContent; // Store content without frontmatter
+      rawContent.value = markdownContent;
       content.value = md.render(markdownContent);
-
       if (frontmatter.title) {
         pageTitle.value = frontmatter.title;
       }
       if (frontmatter.description) {
         pageDescription.value = frontmatter.description;
       }
-      // The TODO for parsing frontmatter is now addressed.
     } else {
       console.warn(`Markdown content not found for key: ${moduleKey} (derived from path: ${currentPath})`);
       content.value = `<article class="prose dark:prose-invert max-w-none"><h1>Nội dung không tìm thấy</h1><p>Không tìm thấy nội dung cho đường dẫn: ${currentPath}.</p></article>`;

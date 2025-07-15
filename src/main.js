@@ -22,8 +22,6 @@ export const createApp = ViteSSG(
       shouldRenderSSRHead: true // Force SSR head rendering
     });
     
-    // ctx.app.use(head); // Temporarily commented out to test vite-ssg auto-registration
-
     // Here you can register global components, directives, install plugins, etc.
 
     // Example: determine the language based on the route
