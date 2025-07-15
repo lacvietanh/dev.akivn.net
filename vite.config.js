@@ -36,7 +36,7 @@ function fetchProjectsPlugin() {
 export default defineConfig({
   assetsInclude: ['**/*.md'],
   plugins: [
-    fetchProjectsPlugin(), // Plugin fetch projects.json trước khi build
+    // fetchProjectsPlugin(), // Plugin fetch projects.json trước khi build
     vue(),
     vueJsx(), // Hỗ trợ JSX trong Vue
     viteStaticCopy({

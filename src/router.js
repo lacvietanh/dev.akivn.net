@@ -1,8 +1,8 @@
 // filepath: /Volumes/DATA/DEV/www/dev.akivn.net/src/router.js
 import HomePage from './views/HomePage.vue'
 
-// Dynamically import all markdown files from content directory
-const modules = import.meta.glob('./content/**/*.md')
+// Get list of markdown files from content directory (just for routing)
+const modules = import.meta.glob('./content/**/*.md', { eager: false })
 
 // Function to generate routes from markdown files
 const generateRoutesFromModules = () => {

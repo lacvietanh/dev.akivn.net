@@ -5,23 +5,35 @@ import { useHead } from '@unhead/vue' // Sử dụng trực tiếp useHead
 import MarkdownIt from 'markdown-it'
 import lazyHljs from '../utils/lazyHighlight.js'
 
+// DEBUG LOGS - Set to true to enable debug output for troubleshooting
+const DEBUG = false;
+const ListFileNameToDebug = ['ssg']; // List of file names to debug, can be empty
+
 // Markdown-it instance
 const md = new MarkdownIt({
   html: true,
   linkify: true,
   typographer: true,
   highlight: (str, lang) => {
-    // Giả sử lazyHljs.getHljs() trả về instance hljs đã được cấu hình
-    // và lazyHljs.loadLanguage() đã được gọi nếu cần trước khi render
-    const hljs = lazyHljs.getHljs(); 
-    if (lang && hljs && hljs.getLanguage(lang)) {
-      try {
-        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
-      } catch (__) {
-        // Bỏ qua lỗi highlight, trả về code không được highlight
-      }
+    // Debug: highlight input
+    if (DEBUG && (!str || typeof str !== 'string')) {
+      console.warn('[Markdown-it Debug] Invalid str parameter:', typeof str, str);
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`; // Fallback
+    if (!str || typeof str !== 'string') {
+      return `<pre class="hljs"><code>${str || ''}</code></pre>`;
+    }
+    try {
+      const hljs = lazyHljs.getHljs();
+      if (lang && hljs && hljs.getLanguage(lang)) {
+        const result = hljs.highlight(str, { language: lang, ignoreIllegals: true });
+        return `<pre class="hljs"><code>${result.value}</code></pre>`;
+      }
+    } catch (error) {
+      if (DEBUG) console.warn('[Markdown-it Debug] Highlight error:', error, 'lang:', lang, 'str length:', str.length);
+      // Fall through to default behavior
+    }
+    // Fallback - escape HTML properly
+    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
   }
 });
 
@@ -37,7 +49,14 @@ const rawContent = ref(''); // Raw markdown string
 // Function to parse simple frontmatter
 const parseFrontmatter = (markdown) => {
   const frontmatter = {};
-  const lines = markdown.split('\\n');
+
+  // Add safety check
+  if (!markdown || typeof markdown !== 'string') {
+    console.warn('[Frontmatter Debug] Invalid markdown parameter:', typeof markdown, markdown);
+    return { frontmatter: {}, content: markdown || '' };
+  }
+
+  const lines = markdown.split('\n');
   if (lines[0] === '---') {
     let i = 1;
     while (i < lines.length && lines[i] !== '---') {
@@ -51,7 +70,7 @@ const parseFrontmatter = (markdown) => {
       i++;
     }
     // Remove frontmatter from content
-    const contentStartIndex = lines.slice(0, i + 1).join('\\n').length + 1;
+    const contentStartIndex = lines.slice(0, i + 1).join('\n').length + 1;
     return { frontmatter, content: markdown.substring(contentStartIndex) };
   }
   return { frontmatter, content: markdown }; // No frontmatter found
@@ -119,12 +138,12 @@ useHead(computed(() => ({
 const initializeData = async () => {
   isLoading.value = true;
   let currentPath = route.path;
-  
+
   // Xóa dấu / ở cuối path nếu có để đảm bảo nhất quán khi tìm file markdown
   if (currentPath.endsWith('/') && currentPath !== '/') {
     currentPath = currentPath.slice(0, -1);
   }
-  
+
   // Normalize path: /basics/html-css -> basics/html-css
   const targetPathSuffix = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
   // Construct module key: /src/content/basics/html-css.md
@@ -143,33 +162,77 @@ const initializeData = async () => {
   pageTitle.value = '';
   pageDescription.value = '';
 
+  // DEBUG: Chỉ enable log cho các file chứa 'ssg' hoặc bật DEBUG toàn cục
+  const shouldDebug = (() => {
+    let currentPath = route.path;
+    if (currentPath.endsWith('/') && currentPath !== '/') {
+      currentPath = currentPath.slice(0, -1);
+    }
+    const targetPathSuffix = currentPath.startsWith('/') ? currentPath.substring(1) : currentPath;
+    const moduleKey = `/src/content/${targetPathSuffix}.md`;
+    // return moduleKey.includes('ssg');
+    return DEBUG && moduleKey.includes(ListFileNameToDebug)
+  })();
   try {
-    const mdModules = import.meta.glob('/src/content/**/*.md', { as: 'raw' });
+    const mdModules = import.meta.glob('/src/content/**/*.md', { query: '?raw', import: 'default', eager: false });
+    // ================= DEBUG LOGS BLOCK =================
+    // Bật DEBUG = true ở đầu file để xem log chi tiết khi cần debug lỗi markdown
+    if (shouldDebug) {
+      // console.log('[Markdown Debug] Available modules:', Object.keys(mdModules));
+      console.log('[Markdown Debug] Looking for moduleKey:', moduleKey);
+    }
+    // ================= END DEBUG LOGS BLOCK =============
     if (mdModules[moduleKey]) {
-      let fullRawContent = await mdModules[moduleKey]();
-      // Fix: handle Vite SSG prod returns { default: string } instead of string
-      if (typeof fullRawContent !== 'string' && fullRawContent && typeof fullRawContent.default === 'string') {
-        fullRawContent = fullRawContent.default;
-      }
-      if (typeof fullRawContent !== 'string') {
-        throw new TypeError(`Markdown module did not return a string. Got: ${typeof fullRawContent}`);
-      }
-      const { frontmatter, content: markdownContent } = parseFrontmatter(fullRawContent);
-      rawContent.value = markdownContent;
-      content.value = md.render(markdownContent);
-      if (frontmatter.title) {
-        pageTitle.value = frontmatter.title;
-      }
-      if (frontmatter.description) {
-        pageDescription.value = frontmatter.description;
+      let fullRawContent;
+      try {
+        fullRawContent = await mdModules[moduleKey]();
+        if (shouldDebug) {
+          console.log('[Markdown Debug] Raw content type:', typeof fullRawContent, 'Value preview:',
+            typeof fullRawContent === 'string' ? fullRawContent.substring(0, 100) : fullRawContent);
+        }
+        // Handle different possible return formats
+        if (typeof fullRawContent === 'string') {
+          // Direct string return (expected for { query: '?raw', import: 'default' })
+        } else if (fullRawContent && typeof fullRawContent.default === 'string') {
+          // Handle case where module returns { default: string }
+          fullRawContent = fullRawContent.default;
+        } else if (typeof fullRawContent === 'number' && isNaN(fullRawContent)) {
+          if (shouldDebug) console.error('[Markdown Debug] Got NaN, this indicates a module loading issue');
+          throw new TypeError(`Module loading returned NaN for ${moduleKey}`);
+        } else {
+          if (shouldDebug) console.error('[Markdown Debug] Unexpected return type:', typeof fullRawContent, fullRawContent);
+          throw new TypeError(`Markdown module did not return a string. Got: ${typeof fullRawContent}, value: ${fullRawContent}`);
+        }
+        if (shouldDebug) console.log('[Markdown Debug] Processing content, length:', fullRawContent.length);
+        const { frontmatter, content: markdownContent } = parseFrontmatter(fullRawContent);
+        if (shouldDebug) {
+          console.log('[Markdown Debug] Parsed frontmatter:', frontmatter);
+          console.log('[Markdown Debug] Content length after frontmatter removal:', markdownContent.length);
+        }
+        rawContent.value = markdownContent;
+        if (shouldDebug) console.log('[Markdown Debug] Starting markdown render...');
+        content.value = md.render(markdownContent);
+        if (shouldDebug) console.log('[Markdown Debug] Markdown render completed, output length:', content.value.length);
+        if (frontmatter.title) {
+          pageTitle.value = frontmatter.title;
+        }
+        if (frontmatter.description) {
+          pageDescription.value = frontmatter.description;
+        }
+      } catch (moduleError) {
+        if (shouldDebug) console.error('[Markdown Debug] Error in module processing:', moduleError);
+        throw moduleError;
       }
     } else {
-      console.warn(`Markdown content not found for key: ${moduleKey} (derived from path: ${currentPath})`);
+      if (shouldDebug) {
+        console.warn(`Markdown content not found for key: ${moduleKey} (derived from path: ${currentPath})`);
+        console.warn('Available keys:', Object.keys(mdModules));
+      }
       content.value = `<article class="prose dark:prose-invert max-w-none"><h1>Nội dung không tìm thấy</h1><p>Không tìm thấy nội dung cho đường dẫn: ${currentPath}.</p></article>`;
       rawContent.value = '';
     }
   } catch (error) {
-    console.error(`Error loading markdown content for ${currentPath} (key: ${moduleKey}):`, error);
+    if (shouldDebug) console.error(`Error loading markdown content for ${currentPath} (key: ${moduleKey}):`, error);
     content.value = `<article class="prose dark:prose-invert max-w-none"><h1>Lỗi tải nội dung</h1><p>Đã xảy ra lỗi khi tải nội dung. Vui lòng thử lại sau.</p><p>${error.message}</p></article>`;
     rawContent.value = '';
   } finally {
@@ -208,52 +271,74 @@ onMounted(() => {
 <style>
 /* Sử dụng CSS thông thường thay vì @apply */
 .topic-content h1 {
-  font-size: 1.875rem; /* 30px */
-  line-height: 2.25rem; /* 36px */
+  font-size: 1.875rem;
+  /* 30px */
+  line-height: 2.25rem;
+  /* 36px */
   font-weight: 700;
-  margin-bottom: 1.5rem; /* 24px */
-  padding-bottom: 0.5rem; /* 8px */
-  border-bottom: 1px solid #e5e7eb; /* Cool Gray 200 */
+  margin-bottom: 1.5rem;
+  /* 24px */
+  padding-bottom: 0.5rem;
+  /* 8px */
+  border-bottom: 1px solid #e5e7eb;
+  /* Cool Gray 200 */
 }
 
 .dark .topic-content h1 {
-  border-bottom-color: #4b5563; /* Cool Gray 600 */
+  border-bottom-color: #4b5563;
+  /* Cool Gray 600 */
 }
 
 
 .topic-content h2 {
-  font-size: 1.5rem; /* 24px */
-  line-height: 2rem; /* 32px */
+  font-size: 1.5rem;
+  /* 24px */
+  line-height: 2rem;
+  /* 32px */
   font-weight: 600;
-  margin-top: 2rem; /* 32px */
-  margin-bottom: 1rem; /* 16px */
-  padding-bottom: 0.25rem; /* 4px */
-  border-bottom: 1px solid #e5e7eb; /* Cool Gray 200 */
+  margin-top: 2rem;
+  /* 32px */
+  margin-bottom: 1rem;
+  /* 16px */
+  padding-bottom: 0.25rem;
+  /* 4px */
+  border-bottom: 1px solid #e5e7eb;
+  /* Cool Gray 200 */
 }
 
 .dark .topic-content h2 {
-  border-bottom-color: #4b5563; /* Cool Gray 600 */
+  border-bottom-color: #4b5563;
+  /* Cool Gray 600 */
 }
 
 .topic-content p {
-  margin-bottom: 1rem; /* 16px */
-  line-height: 1.75; /* More readable line height */
+  margin-bottom: 1rem;
+  /* 16px */
+  line-height: 1.75;
+  /* More readable line height */
 }
 
-.topic-content ul, .topic-content ol {
+.topic-content ul,
+.topic-content ol {
   list-style-position: outside;
-  padding-left: 1.5rem; /* 24px */
-  margin-bottom: 1.5rem; /* 24px */
+  padding-left: 1.5rem;
+  /* 24px */
+  margin-bottom: 1.5rem;
+  /* 24px */
 }
 
 .topic-content li {
-  margin-bottom: 0.5rem; /* 8px */
+  margin-bottom: 0.5rem;
+  /* 8px */
 }
 
 .topic-content pre.hljs {
-  border-radius: 0.375rem; /* 6px */
-  padding: 1rem; /* 16px */
-  margin-bottom: 1.5rem; /* 24px */
+  border-radius: 0.375rem;
+  /* 6px */
+  padding: 1rem;
+  /* 16px */
+  margin-bottom: 1.5rem;
+  /* 24px */
   overflow-x: auto;
 }
 
@@ -262,29 +347,37 @@ onMounted(() => {
 }
 
 .topic-content a {
-  color: #3b82f6; /* Blue 500 */
+  color: #3b82f6;
+  /* Blue 500 */
   text-decoration: none;
 }
+
 .topic-content a:hover {
   text-decoration: underline;
 }
 
 .dark .topic-content a {
-  color: #60a5fa; /* Blue 400 */
+  color: #60a5fa;
+  /* Blue 400 */
 }
 
 /* Add some padding to the content area itself */
 .topic-content {
-  padding: 1rem; /* Default padding */
+  padding: 1rem;
+  /* Default padding */
 }
 
-@media (min-width: 640px) { /* sm */
+@media (min-width: 640px) {
+
+  /* sm */
   .topic-content {
     padding: 1.5rem;
   }
 }
 
-@media (min-width: 768px) { /* md */
+@media (min-width: 768px) {
+
+  /* md */
   .topic-content {
     padding: 2rem;
   }

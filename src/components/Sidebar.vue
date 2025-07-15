@@ -66,7 +66,7 @@
             { name: 'Hỏi đáp Firebase', path: '/firebase/advanced/faq' }
           ]
         },
-        { name: 'SSR/SSG (ViteSSG)', path: '/vue/ssg' },
+        { name: 'SSR/SSG (ViteSSG)', path: '/vue/vite-ssg' },
         { name: 'Tauri (Framework)', path: '/tauri/introduction' },
         { name: 'ElectronJS', path: '/desktop/electronjs' },
       ]
