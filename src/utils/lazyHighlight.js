@@ -17,7 +17,7 @@ const languageAliases = {
   shell: 'bash',
   sh: 'bash',
   zsh: 'bash',
-  vue: 'html', // vue files often use html for template part
+  vue: 'xml', // highlight vue as xml (template)
   // Add more aliases as needed
 };
 

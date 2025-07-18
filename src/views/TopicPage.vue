@@ -343,7 +343,9 @@ onMounted(() => {
 }
 
 .topic-content pre.hljs code {
-  white-space: pre;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
 }
 
 .topic-content a {
